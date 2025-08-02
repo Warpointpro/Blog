@@ -1,9 +1,8 @@
 from django.db import models
-
-# Create your models here.
 from django.db import models
 from django.utils import timezone
 
+# --- Modelo para las Categorías de los Posts ---
 class Categoria(models.Model):
     """
     Define la tabla de Categorías en la base de datos.
@@ -11,9 +10,10 @@ class Categoria(models.Model):
     """
     nombre = models.CharField(max_length=50, null=False)
 
-    def str(self):
+    def __str__(self):
         return self.nombre
 
+# --- Modelo para las Noticias (Posts) ---
 class Post(models.Model):
     """
     Define la tabla de Posts en la base de datos.
@@ -29,7 +29,7 @@ class Post(models.Model):
     imagen = models.ImageField(null=True, blank=True, upload_to='posts', default='posts/default.png')
     publicado = models.DateTimeField(default=timezone.now)
 
-    def str(self):
+    def __str__(self):
         return self.titulo
 
     def delete(self, using=None, keep_parents=False):
