@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Blog Simple</title>
+    <style>
+        /* Aquí puedes agregar estilos CSS */
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .header { background-color: #333; color: white; padding: 1em; text-align: center; }
+        .nav a { color: white; text-decoration: none; margin: 0 15px; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        .post { background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        /* Estilo para la barra de búsqueda (opcional) */
+        .search-bar { text-align: right; margin-bottom: 20px; }
+        .search-bar input { padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="nav">
+            <a href="#">Inicio</a>
+            <a href="#">Acerca de</a>
+            <a href="#">Contacto</a>
+        </div>
+        <h1>Bienvenido a Mi Blog</h1>
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar posteos...">
+        </div>
+
+        <div id="post-list">
+            <h2>Últimos Posteos</h2>
+            <div class="post">
+                <h3>Título del Post de Prueba</h3>
+                <p>Este es el contenido de un post de prueba. Aquí irá la descripción corta del artículo.</p>
+                <a href="#">Leer más...</a>
+                </div>
+            <div class="post">
+                <h3>Otro Post Interesante</h3>
+                <p>Aquí puedes hablar sobre otro tema. La idea es que cada post sea un div.</p>
+                <a href="#">Leer más...</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
