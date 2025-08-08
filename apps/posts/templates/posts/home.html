@@ -19,13 +19,22 @@
 <body>
 
     <header class="header">
-        <div class="nav">
-            <a href="#">Inicio</a>
-            <a href="{% url 'acerca_de' %}">Acerca de</a>
-            <a href="#">Contacto</a>
-        </div>
-        <h1>Bienvenido a Mi Blog</h1>
-    </header>
+    <div class="nav">
+        <a href="#">Inicio</a>
+        <a href="{% url 'acerca_de' %}">Acerca de</a>
+        <a href="#">Contacto</a>
+
+        {% if user.is_authenticated %}
+            <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
+            <a href="{% url 'logout' %}" style="margin-left: 15px;">Cerrar Sesión</a>
+        {% else %}
+            <a href="{% url 'login' %}" style="margin-left: 15px;">Iniciar Sesión</a>
+            <a href="{% url 'register' %}" style="margin-left: 15px;">Registrarse</a>
+        {% endif %}
+
+    </div>
+    <h1>Bienvenido a Mi Blog</h1>
+</header>
 
     <div class="container">
         <div class="search-bar">
