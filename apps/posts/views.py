@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from apps.posts.forms import CustomUserCreationForm
-def home(request):
-    return render(request, 'posts/home.html')
-def about(request):
-    return render(request, 'posts/acerca_de.html') 
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
+def home(request):
+    return render(request, 'posts/home.html')
+def about(request):
+    return render(request, 'posts/acerca_de.html') 
+
 
 def register(request):
     if request.method == 'POST':
@@ -25,3 +26,6 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     next_page = 'login' # Redirige a la página de login después del logout
+
+
+    
