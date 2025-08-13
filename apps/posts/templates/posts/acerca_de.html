@@ -20,8 +20,14 @@
     <header class="header">
         <div class="nav">
             <a href="{% url 'home' %}">Inicio</a>
-            <a href="#">Acerca de</a>
-            <a href="#">Contacto</a>
+            <a href="{% url 'contacto' %}">Contacto</a>
+            {% if user.is_authenticated %}
+            <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
+            <a href="{% url 'logout' %}" style="margin-left: 15px;">Cerrar Sesión</a>
+        {% else %}
+            <a href="{% url 'login' %}" style="margin-left: 15px;">Iniciar Sesión</a>
+            <a href="{% url 'register' %}" style="margin-left: 15px;">Registrarse</a>
+        {% endif %}
         </div>
         <h1>Acerca de Nosotros</h1>
     </header>
@@ -32,12 +38,9 @@
         
         <div class="profile-card">
             <h3>Nuestra foto de perfil</h3>
-            <img src="{% static 'posts/Kit.png' %}" alt="Mi Foto de Perfil" class="profile-img">
+            <img src="{% static 'posts/LOGO.png' %}" alt="Foto de Perfil" class="profile-img">
         </div>
-
-        <h2>Contacto</h2>
-        <p>Puedes contactarnos en la siguiente dirección de correo electrónico:</p>
-        <p><strong>contacto@miblog.com</strong></p>
+        <h3>Compartimos nuestros conocimientos y brindamos ayuda a toda clase de gente tanto novata como experimentadas en este campo.</h3>
     </div>
 
 </body>

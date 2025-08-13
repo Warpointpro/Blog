@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Blog Simple</title>
+    <title>BLOG DE AYUDA</title>
     <link rel="stylesheet" href="{% static 'static/posts/style.css' %}">
     <style>
         /* Aquí puedes agregar estilos CSS */
@@ -132,7 +132,7 @@
     <div class="nav">
         <a href="#">Inicio</a>
         <a href="{% url 'acerca_de' %}">Acerca de</a>
-        <a href="#">Contacto</a>
+        <a href="{% url 'contacto' %}">Contacto</a>
 
         {% if user.is_authenticated %}
             <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
@@ -143,28 +143,56 @@
         {% endif %}
 
     </div>
-    <h1>Bienvenido a Mi Blog</h1>
+    <h1>BLOG DE AYUDA A PROGRAMADORES</h1>
 </header>
 
     <div class="container">
-        <div class="search-bar">
-            <input type="text" placeholder="Buscar posteos...">
-        </div>
+    <!-- Formulario de filtros -->
+    <form method="get" class="search-bar">
+        <!-- Búsqueda por texto -->
+        <input type="text" name="q" placeholder="Buscar posteos..." value="{{ request.GET.q }}">
 
-        <div id="post-list">
-            <h2>Últimos Posteos</h2>
+        <!-- Categoría -->
+        <select name="categoria">
+            <option value="">Todas las categorías</option>
+            {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if request.GET.categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Orden por fecha -->
+        <select name="fecha">
+            <option value="">Orden por fecha</option>
+            <option value="asc" {% if request.GET.fecha == "asc" %}selected{% endif %}>Antiguo primero</option>
+            <option value="desc" {% if request.GET.fecha == "desc" %}selected{% endif %}>Reciente primero</option>
+        </select>
+
+        <!-- Orden alfabético -->
+        <select name="titulo">
+            <option value="">Orden alfabético</option>
+            <option value="asc" {% if request.GET.titulo == "asc" %}selected{% endif %}>A-Z</option>
+            <option value="desc" {% if request.GET.titulo == "desc" %}selected{% endif %}>Z-A</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <!-- Lista de posts -->
+    <div id="post-list">
+        <h2>Últimos Posteos</h2>
+        {% for post in posts %}
             <div class="post">
-                <h3>Título del Post de Prueba</h3>
-                <p>Este es el contenido de un post de prueba. Aquí irá la descripción corta del artículo.</p>
-                <a href="#">Leer más...</a>
-                </div>
-            <div class="post">
-                <h3>Errores habituales al programar</h3>
-                <p>te ha pasado alguna vez de confundir el operador == del = pues aqui te ayudaremos a explicar que funcion cumple cada uno</p>
+                <h3>{{ post.titulo }}</h3>
+                <p>{{ post.contenido|truncatewords:20 }}</p>
                 <a href="#">Leer más...</a>
             </div>
-        </div>
+        {% empty %}
+            <p>No hay publicaciones que coincidan con el filtro.</p>
+        {% endfor %}
     </div>
-
+</div>
 </body>
+
 </html>

@@ -8,8 +8,8 @@ def home(request):
     return render(request, 'posts/home.html')
 def about(request):
     return render(request, 'posts/acerca_de.html') 
-
-
+def contacto(request):
+    return render(request, 'posts/contacto.html')
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
