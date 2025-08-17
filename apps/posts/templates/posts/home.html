@@ -1,93 +1,9 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLOG DE AYUDA</title>
-    <link rel="stylesheet" href="{% static 'static/posts/style.css' %}">
-    <style>
-        /* Estilos (idénticos a los que enviaste) */
-        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        .header { background-color: #333; color: white; padding: 1em; text-align: center; }
-        .nav a { color: white; text-decoration: none; margin: 0 15px; }
-        .container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
-        .post { background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .search-bar { text-align: right; margin-bottom: 20px; }
-        .search-bar input { padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1.5em;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .header h1 { font-family: 'Georgia', serif; font-size: 2.2em; margin-top: 0; margin-bottom: 0.5em; }
-        .nav a {
-            color: white; text-decoration: none; margin: 0 15px;
-            font-weight: 500; transition: color 0.3s ease;
-        }
-        .nav a:hover { color: #f39c12; }
-        .container { max-width: 960px; margin: 30px auto; padding: 0 20px; }
-        .post {
-            background-color: white; padding: 25px; margin-bottom: 25px;
-            border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .post:hover {
-            transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-        .post h3 { color: #34495e; font-size: 1.5em; margin-top: 0; }
-        .post p { color: #666; line-height: 1.6; }
-        .post a { color: #3498db; text-decoration: none; font-weight: bold; }
-        .post a:hover { text-decoration: underline; }
-        .search-bar { text-align: right; margin-bottom: 25px; }
-        .search-bar input {
-            padding: 10px; border-radius: 20px; border: 1px solid #ddd; width: 250px;
-            font-size: 1em; transition: border-color 0.3s ease;
-        }
-        .search-bar input:focus { outline: none; border-color: #3498db; }
-        h2 {
-            color: #333; font-size: 1.8em; border-bottom: 2px solid #bdc3c7;
-            padding-bottom: 5px; margin-bottom: 20px;
-        }
-        .post img { max-width: 100%; height: auto; margin-top: 10px; border-radius: 8px; }
-    </style>
-</head>
-<body>
 
-<header class="header">
-    <div class="nav">
-        <a href="#">Inicio</a>
-        <a href="{% url 'acerca_de' %}">Acerca de</a>
-        <a href="{% url 'contacto' %}">Contacto</a>
+{% block title %}Inicio - Blog de Ayuda a Programadores{% endblock %}
 
-        {% if user.is_authenticated %}
-            <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
-            <a href="{% url 'logout' %}" style="margin-left: 15px;">Cerrar Sesión</a>
-        {% else %}
-            <a href="{% url 'login' %}" style="margin-left: 15px;">Iniciar Sesión</a>
-            <a href="{% url 'register' %}" style="margin-left: 15px;">Registrarse</a>
-        {% endif %}
-
-        {% if user.is_authenticated %}
-            <a href="{% url 'crear_post' %}" class="btn btn-primary">Crear Post</a>
-        {% else %}
-            <p>Inicia sesión para crear un nuevo post.</p>
-        {% endif %}
-    </div>
-    <h1>BLOG DE AYUDA A PROGRAMADORES</h1>
-</header>
-
-<div class="container">
-    <!-- Formulario de filtros -->
+{% block content %}
     <form method="get" class="search-bar">
         <input type="text" name="q" placeholder="Buscar posteos..." value="{{ request.GET.q }}">
         <select name="categoria">
@@ -103,43 +19,74 @@
             <option value="asc" {% if request.GET.fecha == "asc" %}selected{% endif %}>Antiguo primero</option>
             <option value="desc" {% if request.GET.fecha == "desc" %}selected{% endif %}>Reciente primero</option>
         </select>
-        <select name="titulo">
-            <option value="">Orden alfabético</option>
-            <option value="asc" {% if request.GET.titulo == "asc" %}selected{% endif %}>A-Z</option>
-            <option value="desc" {% if request.GET.titulo == "desc" %}selected{% endif %}>Z-A</option>
-        </select>
         <button type="submit">Filtrar</button>
     </form>
 
-    <!-- Lista de posts -->
     <h2>Últimos Posteos</h2>
-    {% if noticias %}
-        {% for noticia in noticias %}
-            <div class="post">
+    {% if page_obj %}
+    {% for noticia in page_obj %}
+            <article class="post">
                 <h3>
-                    <a href="{% url 'post_detail' noticia.pk %}">
-                        {{ noticia.titulo }}
-                    </a>
+                    <a href="{% url 'post_detail' noticia.pk %}">{{ noticia.titulo }}</a>
                 </h3>
-                <p>{{ noticia.contenido|truncatechars:100 }}</p>
-                <small>Categoría: {{ noticia.categoria.nombre }}</small> |
-                <small>Autor: {{ noticia.autor.username }}</small> |
-                <small>Fecha: {{ noticia.fecha }}</small>
+
+                <div class="post-meta">
+                    <small>Categoría: {{ noticia.categoria.nombre }}</small>
+                    <small>Autor: {{ noticia.autor.username }}</small>
+                    <small>Fecha: {{ noticia.fecha|date:"d M Y" }}</small>
+                </div>
                 
                 {% if noticia.imagen %}
                     <a href="{% url 'post_detail' noticia.pk %}">
                         <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
                     </a>
-                {% else %}
-                    <img src="{% static 'img/placeholder.png' %}" alt="Sin imagen">
                 {% endif %}
-            </div>
+
+                <p>{{ noticia.contenido|truncatewords:30 }}</p>
+                <a href="{% url 'post_detail' noticia.pk %}" class="read-more">Leer más</a>
+            </article>
         {% endfor %}
     {% else %}
         <p>No hay publicaciones que coincidan con el filtro.</p>
     {% endif %}
+    <div class="pagination">
+    {% for num in page_obj.paginator.page_range %}
+        {% if num == page_obj.number %}
+            <span class="current">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}">
+                {{ num }}
+            </a>
+        {% endif %}
+    {% endfor %}
 </div>
 
-</body>
-</html>
+<style>
+.pagination {
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+.pagination a, .pagination span {
+    display: inline-block;
+    padding: .4rem .8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+.pagination a {
+    background: #f1f1f1;
+    color: #333;
+}
+.pagination a:hover {
+    background: #0d6efd;
+    color: #fff;
+}
+.pagination .current {
+    background: #0d6efd;
+    color: #fff;
+}
+</style>
+{% endblock %}
 

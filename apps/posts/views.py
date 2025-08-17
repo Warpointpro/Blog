@@ -6,10 +6,45 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from .models import Noticia
 from django.shortcuts import render, get_object_or_404
-from .models import Noticia
+from django.core.paginator import Paginator
 def home(request):
-    noticias = Noticia.objects.all().order_by('-fecha')
-    return render(request, 'posts/home.html', {'noticias': noticias})
+    # 1. Capturar parámetros del formulario
+    q = request.GET.get('q', '')               # texto de búsqueda
+    categoria_id = request.GET.get('categoria', '')  # id categoría
+    fecha = request.GET.get('fecha', '')       # asc / desc
+
+    # 2. Iniciar el queryset base
+    noticias = Noticia.objects.all()
+
+    # 3. Filtrar por búsqueda en título o contenido
+    if q:
+        noticias = noticias.filter(titulo__icontains=q) | noticias.filter(contenido__icontains=q)
+
+    # 4. Filtrar por categoría
+    if categoria_id:
+        noticias = noticias.filter(categoria_id=categoria_id)
+
+    # 5. Ordenar por fecha
+    if fecha == "asc":
+        noticias = noticias.order_by("fecha")
+    elif fecha == "desc":
+        noticias = noticias.order_by("-fecha")
+    else:
+        noticias = noticias.order_by("-fecha")  # por defecto recientes
+
+    # 6. Paginar resultados (ej: 5 por página)
+    paginator = Paginator(noticias, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # 7. Pasar categorías para el dropdown
+    from .models import Categoria
+    categorias = Categoria.objects.all()
+
+    return render(request, 'posts/home.html', {
+        'categorias': categorias,
+        'page_obj': page_obj
+    })
 def about(request):
     return render(request, 'posts/acerca_de.html')
 
@@ -50,4 +85,21 @@ def crear_post(request):
 @login_required
 def post_detail(request, pk):
     post = get_object_or_404(Noticia, pk=pk)
-    return render(request, 'posts/post_detail.html', {'post': post})
+    liked = False
+    if request.user.is_authenticated:
+        liked = post.likes.filter(id=request.user.id).exists()
+    return render(request, 'posts/post_detail.html', {
+        'post': post,
+        'liked': liked
+    })
+@login_required
+def like_post(request, pk):
+    post = get_object_or_404(Noticia, pk=pk)
+
+    # Si el usuario ya dio like, lo quitamos; si no, lo añadimos
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+
+    return redirect('post_detail', pk=pk)

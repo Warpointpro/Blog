@@ -1,106 +1,48 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BLOG DE AYUDA A PROGRAMADORES{% endblock %}</title>
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa; /* Un gris más claro y suave */
-            color: #333;
-        }
 
-        /* Encabezado */
-        .header {
-            background-color: #2c3e50; /* Un gris oscuro más elegante */
-            color: white;
-            padding: 1.5em;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 
-        .header h1 {
-            font-family: 'Georgia', serif;
-            font-size: 2.2em;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* Navegación */
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav a:hover {
-            color: #f39c12; /* Color de acento al pasar el mouse */
-        }
-
-        /* Contenedor principal para el contenido */
-        .container {
-            max-width: 960px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        /* Estilos de los posts */
-        .post {
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .post:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-
-        .post h3 {
-            color: #34495e;
-            font-size: 1.5em;
-            margin-top: 0;
-        }
-
-        .post p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .post a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .post a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'posts/style.css' %}">
 </head>
 <body>
+
     <header class="header">
-        <div class="nav">
-            <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'acerca_de' %}">Acerca de</a>
-            <a href="{% url 'contacto' %}">Contacto</a>
-            <a href="{% url 'login' %}">Iniciar Sesión</a>
-            <a href="{% url 'register' %}">Registrarse</a>
-        </div>
+        <h1 class="header-title">BLOG DE AYUDA A PROGRAMADORES</h1>
+        <nav class="nav">
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Inicio</a>
+                <a href="{% url 'acerca_de' %}">Acerca de</a>
+                <a href="{% url 'contacto' %}">Contacto</a>
+            </div>
+    
+            <div class="nav-user">
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Hola, {{ user.username }}!</span>
+                    {% if user.is_staff %}
+                        <a href="/admin/">Panel Admin</a>
+                    {% endif %}
+                    <a href="{% url 'crear_post' %}" class="btn-create-post">Crear Post</a>
+                    <a href="{% url 'logout' %}">Cerrar Sesión</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Iniciar Sesión</a>
+                    <a href="{% url 'register' %}">Registrarse</a>
+                {% endif %}
+            </div>
+        </nav>
     </header>
 
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
 
 </body>
 </html>

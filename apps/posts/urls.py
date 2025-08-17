@@ -10,6 +10,7 @@ urlpatterns = [
     path('contacto/', views.contacto, name='contacto'),
     path('crear/', views.crear_post, name='crear_post'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
+    path('post/<int:pk>/like/', views.like_post, name='like_post')
 ]
 
         

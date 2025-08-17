@@ -1,6 +1,63 @@
-<h2>NUEVA PUBLICACION</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Publicar</button>
-</form>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nueva Publicación{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg border-0 p-4 bg-light" style="max-width: 800px; margin: auto;">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+        <h2 class="form-title display-5 fw-bold text-primary">
+            📝 Nueva Publicación
+        </h2>
+        <p class="text-muted">
+            Comparte tus ideas, noticias o artículos con la comunidad
+        </p>
+        <hr class="mt-3 mb-4">
+    </div>
+
+    <!-- Formulario -->
+    <form method="post" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg px-4 py-2 shadow-sm">
+                📤 Publicar
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Estilos para campos -->
+<style>
+    textarea {
+        min-height: 200px; /* Altura inicial */
+        resize: vertical; /* Permitir que el usuario la agrande si quiere */
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    input, select {
+        width: 100%;
+        padding: 0.6rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+    textarea:focus, input:focus {
+        border-color: #198754;
+        outline: none;
+        box-shadow: 0 0 4px rgba(25, 135, 84, 0.5);
+    }
+</style>
+{% endblock %}
+
+
+

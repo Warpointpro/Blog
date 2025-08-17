@@ -17,6 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL= '/login/'
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

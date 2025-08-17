@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Iniciar Sesión{% endblock %}
+{% block title %}Acerca de Nosotros{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -75,21 +75,6 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="nav">
-            <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'acerca_de' %}">Acerca de</a>
-            <a href="{% url 'contacto' %}">Contacto</a>
-            {% if user.is_authenticated %}
-            <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
-            <a href="{% url 'logout' %}" style="margin-left: 15px;">Cerrar Sesión</a>
-        {% else %}
-            <a href="{% url 'login' %}" style="margin-left: 15px;">Iniciar Sesión</a>
-            <a href="{% url 'register' %}" style="margin-left: 15px;">Registrarse</a>
-        {% endif %}
-        </div>
-    </header>
-
     <div class="container">
         <h1>Acerca del Equipo</h1>
         <p>
@@ -116,10 +101,10 @@
         <div class="contact-section">
             <h2>Contacto para Consultas</h2>
             <p>Si tienes alguna pregunta, sugerencia o simplemente quieres saludar, no dudes en contactarnos a través de los siguientes canales:</p>
-            <p><strong>Correo Electrónico:</strong> <a href="mailto:contacto@mi-blog.com">contacto@mi-blog.com</a></p>
-            <p><strong>Redes Sociales:</strong> <a href="https://twitter.com/mi-blog" target="_blank">Twitter</a> | <a href="https://facebook.com/mi-blog" target="_blank">Facebook</a></p>
+            <p><strong>Redes Sociales:</strong> <a href="https://www.instagram.com/jonathanarruti/" target="_blank">Instagram</a> | <a href="https://www.facebook.com/jonathan.arruti/?locale=es_LA" target="_blank">Facebook</a></p>
         </div>
     </div>
 </body>
+{% endblock %}
 </html>
 

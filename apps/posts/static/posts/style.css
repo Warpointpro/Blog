@@ -1,114 +1,223 @@
-/* Paleta de colores:
-   Fondo: #f8f9fa
-   Principal: #ffffff
-   Texto oscuro: #333
-   Acento: #3498db
+/* ==============================================
+   STYLE.CSS - BLOG
+   ==============================================
+   Autor: Danilo
+   ==============================================
 */
 
+/* ---------------------------
+   1. Variables y Estilos Globales
+   ---------------------------
+*/
+:root {
+    --color-fondo: #f0f2f5;
+    --color-principal: #ffffff;
+    --color-texto-oscuro: #2c3e50;
+    --color-texto-secundario: #596a7b;
+    --color-acento-primario: #3498db;
+    --color-acento-secundario: #f39c12;
+    --color-borde: #d1d5da;
+    --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --sombra-elevada: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --radio-borde: 12px;
+    --fuente-principal: 'Poppins', sans-serif;
+}
+
 body {
-    background-color: #f8f9fa; /* Un gris más claro y suave */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+    background-color: var(--color-fondo);
+    font-family: var(--fuente-principal);
+    color: var(--color-texto-oscuro);
     margin: 0;
     padding: 0;
+    line-height: 1.6;
 }
 
-/* Encabezado */
+/* ---------------------------
+   2. Encabezado y Navegación (base.html)
+   ---------------------------
+*/
 .header {
-    background-color: #2c3e50; /* Un gris oscuro más elegante */
-    color: white;
-    padding: 1.5em;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--color-texto-oscuro);
+    color: var(--color-principal);
+    padding: 1em 2em;
+    box-shadow: var(--sombra-suave);
 }
 
-.header h1 {
+.header-title {
     font-family: 'Georgia', serif;
-    font-size: 2.2em;
-    margin-top: 0;
-    margin-bottom: 0.5em;
+    text-align: center;
+    font-size: 2.5em;
+    margin: 0 0 0.5em 0;
 }
 
-/* Navegación */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-links, .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio uniforme entre elementos */
+}
+
 .nav a {
-    color: white;
+    color: var(--color-principal);
     text-decoration: none;
-    margin: 0 15px;
+    padding: 5px;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .nav a:hover {
-    color: #f39c12; /* Color de acento al pasar el mouse */
+    color: var(--color-acento-secundario);
 }
 
-/* Contenedor principal */
+.user-greeting {
+    font-weight: 500;
+}
+
+.btn-create-post {
+    background-color: var(--color-acento-primario);
+    padding: 8px 15px;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-create-post:hover {
+    background-color: #2980b9;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* ---------------------------
+   3. Contenedor Principal y Títulos (base.html)
+   ---------------------------
+*/
 .container {
     max-width: 960px;
-    margin: 30px auto;
+    margin: 40px auto;
     padding: 0 20px;
 }
 
-/* Tarjetas de Posts */
+h2 {
+    font-size: 1.8em;
+    border-bottom: 3px solid var(--color-acento-primario);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+/* ---------------------------
+   4. Formulario de Filtros (home.html)
+   ---------------------------
+*/
+.search-bar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 40px;
+    background-color: var(--color-principal);
+    padding: 15px;
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+}
+
+.search-bar input,
+.search-bar select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--color-borde);
+    font-size: 1em;
+    font-family: var(--fuente-principal);
+    transition: all 0.3s ease;
+}
+
+.search-bar input:focus,
+.search-bar select:focus {
+    outline: none;
+    border-color: var(--color-acento-primario);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.search-bar input {
+    flex-grow: 1;
+}
+
+.search-bar button {
+    background-color: var(--color-acento-primario);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #2980b9;
+}
+
+/* ---------------------------
+   5. Tarjetas de Posts (home.html)
+   ---------------------------
+*/
 .post {
-    background-color: white;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 10px; /* Esquinas más redondeadas */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Sombra más suave y moderna */
+    background: var(--color-principal);
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .post:hover {
-    transform: translateY(-5px); /* Efecto de elevación sutil */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    transform: translateY(-8px);
+    box-shadow: var(--sombra-elevada);
 }
 
-.post h3 {
-    color: #34495e; /* Color oscuro para los títulos */
-    font-size: 1.5em;
-    margin-top: 0;
+.post h3 a {
+    color: var(--color-texto-oscuro);
+    font-size: 1.6em;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post h3 a:hover {
+    color: var(--color-acento-primario);
+}
+
+.post .post-meta {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+    color: #7f8c8d;
+    font-size: 0.9em;
 }
 
 .post p {
-    color: #666;
-    line-height: 1.6;
+    color: var(--color-texto-secundario);
+    font-size: 1.1em;
+    margin: 15px 0;
 }
 
-.post a {
-    color: #3498db; /* Un azul más vibrante para los enlaces */
-    text-decoration: none;
+.post img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.post .read-more {
+    display: inline-block;
+    margin-top: 15px;
     font-weight: bold;
+    color: var(--color-acento-primario);
+    text-decoration: none;
 }
 
-.post a:hover {
+.post .read-more:hover {
     text-decoration: underline;
-}
-
-/* Barra de Búsqueda */
-.search-bar {
-    text-align: right;
-    margin-bottom: 25px;
-}
-
-.search-bar input {
-    padding: 10px;
-    border-radius: 20px; /* Borde más redondeado */
-    border: 1px solid #ddd;
-    width: 250px;
-    font-size: 1em;
-    transition: border-color 0.3s ease;
-}
-
-.search-bar input:focus {
-    outline: none;
-    border-color: #3498db; /* Borde de color al estar activo */
-}
-
-h2 {
-    color: #333;
-    font-size: 1.8em;
-    border-bottom: 2px solid #bdc3c7; /* Línea sutil para separar */
-    padding-bottom: 5px;
-    margin-bottom: 20px;
 }
