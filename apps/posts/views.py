@@ -5,6 +5,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from .models import Noticia
+from django.shortcuts import render, get_object_or_404
+from .models import Noticia
 def home(request):
     noticias = Noticia.objects.all().order_by('-fecha')
     return render(request, 'posts/home.html', {'noticias': noticias})
@@ -45,5 +47,7 @@ def crear_post(request):
     else:
         form = PostForm()
     return render(request, 'posts/crear_noticia.html', {'form': form})
-
-    
+@login_required
+def post_detail(request, pk):
+    post = get_object_or_404(Noticia, pk=pk)
+    return render(request, 'posts/post_detail.html', {'post': post})

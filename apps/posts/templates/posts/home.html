@@ -7,7 +7,7 @@
     <title>BLOG DE AYUDA</title>
     <link rel="stylesheet" href="{% static 'static/posts/style.css' %}">
     <style>
-        /* Aquí puedes agregar estilos CSS */
+        /* Estilos (idénticos a los que enviaste) */
         body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
         .header { background-color: #333; color: white; padding: 1em; text-align: center; }
         .nav a { color: white; text-decoration: none; margin: 0 15px; }
@@ -29,70 +29,36 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .header h1 {
-            font-family: 'Georgia', serif;
-            font-size: 2.2em;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
+        .header h1 { font-family: 'Georgia', serif; font-size: 2.2em; margin-top: 0; margin-bottom: 0.5em; }
         .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 500;
-            transition: color 0.3s ease;
+            color: white; text-decoration: none; margin: 0 15px;
+            font-weight: 500; transition: color 0.3s ease;
         }
         .nav a:hover { color: #f39c12; }
         .container { max-width: 960px; margin: 30px auto; padding: 0 20px; }
         .post {
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            background-color: white; padding: 25px; margin-bottom: 25px;
+            border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .post:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15);
         }
-        .post h3 {
-            color: #34495e;
-            font-size: 1.5em;
-            margin-top: 0;
-        }
+        .post h3 { color: #34495e; font-size: 1.5em; margin-top: 0; }
         .post p { color: #666; line-height: 1.6; }
         .post a { color: #3498db; text-decoration: none; font-weight: bold; }
         .post a:hover { text-decoration: underline; }
-        .search-bar {
-            text-align: right;
-            margin-bottom: 25px;
-        }
+        .search-bar { text-align: right; margin-bottom: 25px; }
         .search-bar input {
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            width: 250px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
+            padding: 10px; border-radius: 20px; border: 1px solid #ddd; width: 250px;
+            font-size: 1em; transition: border-color 0.3s ease;
         }
-        .search-bar input:focus {
-            outline: none;
-            border-color: #3498db;
-        }
+        .search-bar input:focus { outline: none; border-color: #3498db; }
         h2 {
-            color: #333;
-            font-size: 1.8em;
-            border-bottom: 2px solid #bdc3c7;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
+            color: #333; font-size: 1.8em; border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 5px; margin-bottom: 20px;
         }
-        .post img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-            border-radius: 8px;
-        }
+        .post img { max-width: 100%; height: auto; margin-top: 10px; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -150,14 +116,20 @@
     {% if noticias %}
         {% for noticia in noticias %}
             <div class="post">
-                <h3>{{ noticia.titulo }}</h3>
+                <h3>
+                    <a href="{% url 'post_detail' noticia.pk %}">
+                        {{ noticia.titulo }}
+                    </a>
+                </h3>
                 <p>{{ noticia.contenido|truncatechars:100 }}</p>
                 <small>Categoría: {{ noticia.categoria.nombre }}</small> |
                 <small>Autor: {{ noticia.autor.username }}</small> |
                 <small>Fecha: {{ noticia.fecha }}</small>
                 
                 {% if noticia.imagen %}
-                    <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                    <a href="{% url 'post_detail' noticia.pk %}">
+                        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                    </a>
                 {% else %}
                     <img src="{% static 'img/placeholder.png' %}" alt="Sin imagen">
                 {% endif %}
@@ -170,3 +142,4 @@
 
 </body>
 </html>
+
