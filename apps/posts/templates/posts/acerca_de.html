@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Acerca de Nosotros{% endblock %}
+
+{% block header_title %}Acerca de Nosotros{% endblock %}
+
+{% block extra_css %}
+    <style>
+        /* Estilos específicos para esta página */
+        .profile-card { text-align: center; margin-bottom: 20px; }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h2>Quiénes somos</h2>
+    <p>Somos un equipo de entusiastas de la tecnología que busca compartir conocimiento sobre Django y el desarrollo web.</p>
+    
+    <div class="profile-card">
+        <h3 style="text-align: center;">Nuestra foto de perfil</h3>
+        <img src="{% static 'posts/LOGO.png' %}" alt="Foto de Perfil" class="profile-img" width="200" height="200" style="display: block; margin: 0 auto;">
+    </div>
+    <h3>Compartimos nuestros conocimientos y brindamos ayuda a toda clase de gente tanto novata como experimentada en este campo.</h3>
+{% endblock %}

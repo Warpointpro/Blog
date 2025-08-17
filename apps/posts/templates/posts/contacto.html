@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca del Equipo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .header .nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .header .nav a:hover {
+            color: #3498db;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .team-member {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .team-member h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .team-member p {
+            margin: 5px 0;
+        }
+        .contact-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+        .contact-section p a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .contact-section p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav">
+            <a href="{% url 'home' %}">Inicio</a>
+            <a href="{% url 'acerca_de' %}">Acerca de</a>
+            <a href="{% url 'contacto' %}">Contacto</a>
+            {% if user.is_authenticated %}
+            <span style="color: white; margin-left: 20px;">Hola, {{ user.username }}!</span>
+            <a href="{% url 'logout' %}" style="margin-left: 15px;">Cerrar Sesión</a>
+        {% else %}
+            <a href="{% url 'login' %}" style="margin-left: 15px;">Iniciar Sesión</a>
+            <a href="{% url 'register' %}" style="margin-left: 15px;">Registrarse</a>
+        {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Acerca del Equipo</h1>
+        <p>
+            Somos un equipo apasionado por la tecnología y la creación de contenido. Nuestro objetivo es ofrecerte un blog de alta calidad que ayude a los nuevos usuarios a adentrarse en el gran mundo de la programacion y habilidades de desarrollo web
+        </p>
+
+        <h2>Nuestros Desarrolladores</h2>
+
+        <div class="team-member">
+            <h3>Jonathan</h3>
+            <p><strong>Descripción:</strong> Encargado del desarrollo general del blog</p>
+        </div>
+
+        <div class="team-member">
+            <h3>Daniel</h3>
+            <p><strong>Descripción:</strong> Se encargo de la parte visual en la creacion del blog</p>
+        </div>
+
+        <div class="team-member">
+            <h3>Tomas</h3>
+            <p><strong>Descripción:</strong> encargado de publicidad y marketing del blog</p>
+        </div>
+
+        <div class="contact-section">
+            <h2>Contacto para Consultas</h2>
+            <p>Si tienes alguna pregunta, sugerencia o simplemente quieres saludar, no dudes en contactarnos a través de los siguientes canales:</p>
+            <p><strong>Correo Electrónico:</strong> <a href="mailto:contacto@mi-blog.com">contacto@mi-blog.com</a></p>
+            <p><strong>Redes Sociales:</strong> <a href="https://twitter.com/mi-blog" target="_blank">Twitter</a> | <a href="https://facebook.com/mi-blog" target="_blank">Facebook</a></p>
+        </div>
+    </div>
+</body>
+</html>
+
