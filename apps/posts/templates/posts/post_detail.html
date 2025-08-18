@@ -22,6 +22,17 @@
                 <span class="badge-cat">{{ post.categoria.nombre }}</span>
             {% endif %}
         </div>
+
+        {% if user.is_authenticated and user == post.autor or user.is_staff %}
+    <form method="post" action="{% url 'borrar_post' post.pk %}" style="margin-top: 1rem;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"
+                onclick="return confirm('¿Seguro que quieres borrar este post?')">
+            🗑️ Borrar este post
+        </button>
+    </form>
+        {% endif %}
+
         <hr class="meta-sep">
     </header>
 
@@ -166,6 +177,4 @@
 .btn-outline:hover { background: #0d6efd; color: #fff; }
 </style>
 {% endblock %}
-
-
 

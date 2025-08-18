@@ -7,6 +7,10 @@ from .forms import CustomUserCreationForm
 from .models import Noticia
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+from django.contrib import messages
 def home(request):
     # 1. Capturar parámetros del formulario
     q = request.GET.get('q', '')               # texto de búsqueda
@@ -103,3 +107,27 @@ def like_post(request, pk):
         post.likes.add(request.user)
 
     return redirect('post_detail', pk=pk)
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+from django.contrib import messages
+from .models import Noticia
+
+class NoticiaDeleteView(DeleteView):
+    model = Noticia
+    template_name = 'posts/confirmar_borrado.html'
+    success_url = reverse_lazy('home')
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        # Si es staff/admin, ve todos los posts
+        if self.request.user.is_staff:
+            return qs
+        # Si no es staff, solo ve sus propios posts
+        return qs.filter(autor=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "El post fue borrado con éxito ✅")
+        return super().delete(request, *args, **kwargs)

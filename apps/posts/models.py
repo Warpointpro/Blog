@@ -15,7 +15,6 @@ class Noticia(models.Model):
     fecha = models.DateTimeField(default=timezone.now)
     imagen = models.ImageField(upload_to='posts/', blank=True, null=True)
     likes = models.ManyToManyField(User, related_name='noticia_likes', blank=True)
-imagen = models.ImageField(upload_to='posts/', blank=True, null=True)
 def __str__(self):
         return self.titulo
 

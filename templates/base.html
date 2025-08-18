@@ -30,7 +30,12 @@
                         <a href="/admin/">Panel Admin</a>
                     {% endif %}
                     <a href="{% url 'crear_post' %}" class="btn-create-post">Crear Post</a>
-                    <a href="{% url 'logout' %}">Cerrar Sesión</a>
+                    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn-logout">Cerrar sesión</button>
+</form>
+    </button>
+</form>
                 {% else %}
                     <a href="{% url 'login' %}">Iniciar Sesión</a>
                     <a href="{% url 'register' %}">Registrarse</a>
