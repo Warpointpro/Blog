@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import NoticiaDeleteView
+from .views import CommentEditView, CommentDeleteView
 urlpatterns = [
     path('', views.home, name='home'),
    path('acerca_de/', views.about, name='acerca_de'),
@@ -13,6 +14,8 @@ urlpatterns = [
     path('post/<int:pk>/like/', views.like_post, name='like_post'),
     path('logout/', views.logout_view, name='logout'),
     path('post/<int:pk>/borrar/', NoticiaDeleteView.as_view(), name='borrar_post'),
+    path('comment/<int:pk>/edit/', CommentEditView.as_view(), name='edit_comment'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete_comment'),
 ]
 
         
