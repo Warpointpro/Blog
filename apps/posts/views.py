@@ -86,15 +86,32 @@ def crear_post(request):
     else:
         form = PostForm()
     return render(request, 'posts/crear_noticia.html', {'form': form})
+from .forms import CommentForm, PostForm
+
 @login_required
 def post_detail(request, pk):
     post = get_object_or_404(Noticia, pk=pk)
     liked = False
     if request.user.is_authenticated:
         liked = post.likes.filter(id=request.user.id).exists()
+
+    # Comentarios
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+            return redirect('post_detail', pk=pk)
+    else:
+        comment_form = CommentForm()
+
     return render(request, 'posts/post_detail.html', {
         'post': post,
-        'liked': liked
+        'liked': liked,
+        'comment_form': comment_form,
+        'comments': post.comments.all()
     })
 @login_required
 def like_post(request, pk):
