@@ -259,7 +259,7 @@ h2 {
   left: 0;
   height: 100%;
   width: 6px;
-  background: linear-gradient(180deg, #0d2b45, #7f8fc7);
+  background: linear-gradient(180deg, #1e6099, #1e6099);
   border-radius: 18px 0 0 18px;
   transition: width 0.3s ease, background 0.3s ease;
 }
@@ -367,7 +367,6 @@ h2 {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #0a1f33, #133b5a);
 }
-
 
 
 
