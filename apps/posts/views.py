@@ -11,7 +11,6 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.contrib import messages
-from .forms import PostForm, CommentForm
 def home(request):
     # 1. Capturar parámetros del formulario
     q = request.GET.get('q', '')               # texto de búsqueda
@@ -132,59 +131,3 @@ class NoticiaDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "El post fue borrado con éxito ✅")
         return super().delete(request, *args, **kwargs)
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import UpdateView, DeleteView
-from .models import Comment
-
-class CommentEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Comment
-    fields = ['content']  # Campo editable
-    template_name = 'comments/edit_comment.html'
-
-    def test_func(self):
-        # Permite acceso si es el autor o un admin/staff
-        comment = self.get_object()
-        return self.request.user == comment.author or self.request.user.is_staff
-class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Comment
-    template_name = 'comments/confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['post'] = self.object.post
-        return context
-
-    def test_func(self):
-        # Igual que en edición, controla permisos
-        comment = self.get_object()
-        return self.request.user == comment.author or self.request.user.is_staff
-
-    def get_success_url(self):
-        # Después de borrar, vuelve al detalle de la noticia
-        return self.object.post.get_absolute_url()
-
-def post_detail(request, pk):
-    post = get_object_or_404(Noticia, pk=pk)
-    liked = post.likes.filter(id=request.user.id).exists()
-    comments = post.comments.all().order_by('-created_at')
-
-    if request.method == 'POST':
-        # Procesar comentario nuevo
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('home')  # 🔹 Redirige al inicio después de comentar
-    else:
-        form = CommentForm()
-
-    return render(request, 'posts/post_detail.html', {
-        'post': post,
-        'liked': liked,
-        'comments': comments,
-        'form': form
-    })   
-template_name = 'posts/edit_comment.html'
-template_name = 'posts/confirm_delete_comment.html'

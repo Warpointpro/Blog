@@ -177,7 +177,8 @@
 .btn-outline:hover { background: #0d6efd; color: #fff; }
 </style>
 {% for comment in post.comments.all %}
-    <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+    <p>{{ comment.content }} — <strong>{{ comment.author }}</strong></p>
+
     {% if user.is_authenticated %}
         {% if user == comment.author or user.is_staff %}
             <a href="{% url 'edit_comment' comment.pk %}">Editar</a>
@@ -185,19 +186,5 @@
         {% endif %}
     {% endif %}
 {% endfor %}
-<h3>Dejar un comentario</h3>
-{% if user.is_authenticated %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow"> 💬 COMENTAR</button>
-    </form>
-{% else %}
-    <p>
-        <a href="{% url 'login' %}?next={% url 'post_detail' post.id %}">
-            Inicia sesión para comentar
-        </a>
-    </p>
-{% endif %}
 {% endblock %}
 

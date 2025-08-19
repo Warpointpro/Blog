@@ -2,7 +2,7 @@ from django import forms
 from .models import Noticia
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Comment
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Noticia
@@ -11,13 +11,3 @@ class PostForm(forms.ModelForm):
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ('email',)
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 3,
-                'placeholder': 'Escribe tu comentario aquí...'
-            })
-        }
