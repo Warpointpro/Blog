@@ -176,15 +176,5 @@
 }
 .btn-outline:hover { background: #0d6efd; color: #fff; }
 </style>
-{% for comment in post.comments.all %}
-    <p>{{ comment.content }} — <strong>{{ comment.author }}</strong></p>
-
-    {% if user.is_authenticated %}
-        {% if user == comment.author or user.is_staff %}
-            <a href="{% url 'edit_comment' comment.pk %}">Editar</a>
-            <a href="{% url 'delete_comment' comment.pk %}">Eliminar</a>
-        {% endif %}
-    {% endif %}
-{% endfor %}
 {% endblock %}
 
