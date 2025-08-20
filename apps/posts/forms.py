@@ -15,10 +15,11 @@ class CustomUserCreationForm(UserCreationForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content']
+        fields = ['content', 'parent']
         widgets = {
             'content': forms.Textarea(attrs={
-                'rows': 15,
+                'rows': 5,
                 'placeholder': 'Escribe tu comentario...'
             }),
+            'parent': forms.HiddenInput()
         }

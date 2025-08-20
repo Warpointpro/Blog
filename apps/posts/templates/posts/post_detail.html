@@ -24,21 +24,20 @@
         </div>
 
         {% if user.is_authenticated and user == post.autor or user.is_staff %}
-    <form method="post" action="{% url 'borrar_post' post.pk %}" style="margin-top: 2rem;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger"
-                onclick="return confirm('¿Seguro que quieres borrar este post?')">
-            🗑️ Borrar este post
-        </button>
-    </form>
+        <div class="post-admin-actions">
+            <form method="post" action="{% url 'borrar_post' post.pk %}" style="display: inline-block;">
+                {% csrf_token %}
+                <button type="submit" class="btn-admin btn-admin-danger"
+                        onclick="return confirm('¿Seguro que quieres borrar este post?')">
+                    🗑️ Borrar
+                </button>
+            </form>
+            <a href="{% url 'editar_post' post.pk %}" class="btn-admin btn-admin-warning">
+                ✏️ Editar
+            </a>
+        </div>
         {% endif %}
-{% if user.is_authenticated %}
-    {% if user == post.autor or user.is_staff %}
-        <a href="{% url 'editar_post' post.pk %}" class="btn btn-warning" style="margin-top: 1rem;">
-            ✏️ Editar este post
-        </a>
-    {% endif %}
-{% endif %}
+
         <hr class="meta-sep">
     </header>
 
@@ -79,370 +78,209 @@
             </a>
         {% endif %}
     </div>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sección de Comentarios</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        .comments-section {
-            max-width: 800px;
-            margin: 0 auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding: 2rem 1rem;
-        }
+    <!-- SECCIÓN DE COMENTARIOS MEJORADA -->
+    <section class="comments-section">
+        <div class="comments-divider">
+            <div class="divider-line"></div>
+            <div class="divider-icon">💬</div>
+            <div class="divider-line"></div>
+        </div>
 
-        .comment-form-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .form-title {
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            color: white;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #fff;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .submit-btn {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            color: white;
-            padding: 0.875rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
-            background: linear-gradient(45deg, #45a049, #3d8b40);
-        }
-
-        .submit-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .login-prompt {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .login-prompt p {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #5d4037;
-            font-weight: 500;
-        }
-
-        .login-link {
-            color: #d32f2f;
-            text-decoration: none;
-            font-weight: 600;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .login-link:hover {
-            border-bottom-color: #d32f2f;
-            transform: translateY(-1px);
-        }
-
-        .comments-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #e0e0e0;
-        }
-
-        .comments-header h3 {
-            margin: 0;
-            font-size: 1.8rem;
-            color: #2c3e50;
-            font-weight: 700;
-        }
-
-        .comments-icon {
-            font-size: 1.5rem;
-        }
-
-        .comment-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.75rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f0f0f0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .comment-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .comment-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .comment-card:hover::before {
-            opacity: 1;
-        }
-
-        .comment-content {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            white-space: pre-line;
-        }
-
-        .comment-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .comment-author {
-            color: #667eea;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .comment-date {
-            color: #7f8c8d;
-            font-weight: 500;
-        }
-
-        .no-comments {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 16px;
-            color: #5a6c7d;
-            font-size: 1.1rem;
-            font-weight: 500;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .no-comments-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .comments-section {
-                padding: 1rem 0.5rem;
-            }
-
-            .comment-form-container,
-            .login-prompt {
-                padding: 1.5rem;
-                margin-bottom: 2rem;
-            }
-
-            .comment-card {
-                padding: 1.25rem;
-            }
-
-            .comments-header h3 {
-                font-size: 1.5rem;
-            }
-
-            .comment-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.25rem;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .comment-card {
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
-</head>
-<body>
-    <div class="comments-section">
-        <!-- Sección para usuarios autenticados -->
+        <!-- Formulario para comentar -->
+        {% if user.is_authenticated %}
         <div class="comment-form-container">
-            <h4 class="form-title">💭 Comparte tu opinión</h4>
-            <form method="post">
-                <!-- Django CSRF token aquí -->         
-                 {% csrf_token %}
+            <div class="form-header">
+                <h4 class="form-title">
+                    <span class="title-icon">✍️</span>
+                    Comparte tu opinión
+                </h4>
+            </div>
+            <form method="post" class="comment-form">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label for="comment">Tu comentario:</label>
-                    <textarea 
-                        class="form-control" 
-                        name="content" 
-                        id="comment" 
-                        placeholder="Escribe tu comentario aquí..."
-                        required></textarea>
+                    <div class="textarea-container">
+                        <textarea 
+                            class="form-control" 
+                            name="content" 
+                            id="comment" 
+                            placeholder="¿Qué piensas sobre este post? Comparte tu opinión..."
+                            required></textarea>
+                        <div class="textarea-focus-border"></div>
+                    </div>
                 </div>
-                <button type="submit" class="submit-btn">
-                    <span>💬</span>
-                    Publicar comentario
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-icon">🚀</span>
+                        <span class="btn-text">Publicar comentario</span>
+                        <div class="btn-shine"></div>
+                    </button>
+                </div>
             </form>
         </div>
-
-        <!-- Sección para usuarios no autenticados -->
-        <div class="login-prompt" style="display: none;">
-            <p>
-                <a href="#" class="login-link">Inicia sesión</a> para poder comentar y unirte a la conversación
-            </p>
+        {% else %}
+        <div class="login-prompt">
+            <div class="login-content">
+                <div class="login-icon">🔐</div>
+                <p class="login-text">
+                    <a href="{% url 'login' %}?next={% url 'post_detail' post.id %}" class="login-link">
+                        Inicia sesión
+                    </a> 
+                    para unirte a la conversación y compartir tu opinión
+                </p>
+            </div>
         </div>
+        {% endif %}
 
-        <!-- Encabezado de comentarios -->
-        {% if comments %}
-  {% for comentario in comments %}
-<div class="comment-card">
-    <div class="comment-content">{{ comentario.content }}</div>
-    <div class="comment-meta">
-        <span class="comment-author">🗣 {{ comentario.author.username }}</span>
-        <span class="comment-date">{{ comentario.created_at|date:"d M Y H:i" }}</span>
-    </div>
+        <!-- Lista de comentarios -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h3 class="comments-title">
+                    <span class="comments-icon">💭</span>
+                    Comentarios
+                    {% if comments %}
+                        <span class="comments-count">({{ comments|length }})</span>
+                    {% endif %}
+                </h3>
+            </div>
 
-    {% if comentario.author == user or user.is_superuser %}
-    <form method="post" action="{% url 'borrar_comentario' comentario.pk %}" class="delete-form">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger btn-sm">🗑️ Borrar</button>
-    </form>
-    {% endif %}
-</div>
-{% endfor %}
-{% else %}
-  <div class="no-comments">
-    <div class="no-comments-icon">💭</div>
-    <p>No hay comentarios aún. ¡Sé el primero en compartir tu opinión!</p>
-  </div>
-{% endif %}
-    </div>
+            {% if comments %}
+            <div class="comments-list">
+                {% for comentario in comments %}
+                <div class="comment-item" data-comment-id="{{ comentario.id }}">
+                    <div class="comment-card">
+                        <div class="comment-avatar">
+                            <div class="avatar-circle">
+                                {{ comentario.author.username|first|upper }}
+                            </div>
+                        </div>
+                        <div class="comment-main">
+                            <div class="comment-header">
+                                <span class="comment-author">{{ comentario.author.username }}</span>
+                                <span class="comment-date">{{ comentario.created_at|date:"d M Y H:i" }}</span>
+                                {% if comentario.author == user or user.is_superuser %}
+                                <div class="comment-actions">
+                                    <form method="post" action="{% url 'borrar_comentario' comentario.pk %}" class="delete-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-delete" 
+                                                onclick="return confirm('¿Seguro que quieres borrar este comentario?')">
+                                            <span class="delete-icon">🗑️</span>
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="comment-content">{{ comentario.content|linebreaks }}</div>
+                            <div class="comment-footer">
+                                {% if user.is_authenticated %}
+                                <button onclick="toggleReplyForm('{{ comentario.id }}')" class="btn-reply">
+                                    <span class="reply-icon">↩️</span>
+                                    Responder
+                                </button>
+                                {% endif %}
+                                
+                                {% if comentario.replies.all %}
+                                <button onclick="toggleReplies('{{ comentario.id }}')" class="btn-show-replies">
+                                    <span class="replies-icon">💬</span>
+                                    Ver respuestas ({{ comentario.replies.all|length }})
+                                </button>
+                                {% endif %}
+                            </div>
 
-    <script>
-        // Efectos adicionales de JavaScript
-        document.addEventListener('DOMContentLoaded', function() {
-            const commentCards = document.querySelectorAll('.comment-card');
-            
-            // Animación de entrada para comentarios
-            commentCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
+                            <!-- Formulario de respuesta -->
+                            {% if user.is_authenticated %}
+                            <div id="reply-form-{{ comentario.id }}" class="reply-form-container" style="display: none;">
+                                <form method="post" class="reply-form">
+                                    {% csrf_token %}
+                                    <div class="reply-input-container">
+                                        <textarea name="content" 
+                                                placeholder="Escribe tu respuesta..." 
+                                                class="reply-textarea" 
+                                                required></textarea>
+                                        <input type="hidden" name="parent" value="{{ comentario.id }}">
+                                    </div>
+                                    <div class="reply-actions">
+                                        <button type="button" onclick="toggleReplyForm('{{ comentario.id }}')" 
+                                                class="btn-cancel">Cancelar</button>
+                                        <button type="submit" class="btn-reply-submit">
+                                            <span>💬</span> Responder
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
 
-            // Efecto de escritura en el textarea
-            const textarea = document.querySelector('.form-control');
-            if (textarea) {
-                textarea.addEventListener('focus', function() {
-                    this.style.transform = 'scale(1.02)';
-                });
-                
-                textarea.addEventListener('blur', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+                            <!-- Respuestas -->
+                            {% if comentario.replies.all %}
+                            <div id="replies-{{ comentario.id }}" class="replies-container" style="display: none;">
+                                {% for respuesta in comentario.replies.all %}
+                                <div class="reply-item">
+                                    <div class="reply-card">
+                                        <div class="reply-avatar">
+                                            <div class="avatar-circle avatar-small">
+                                                {{ respuesta.author.username|first|upper }}
+                                            </div>
+                                        </div>
+                                        <div class="reply-main">
+                                            <div class="reply-header">
+                                                <span class="reply-author">{{ respuesta.author.username }}</span>
+                                                <span class="reply-date">{{ respuesta.created_at|date:"d M Y H:i" }}</span>
+                                            </div>
+                                            <div class="reply-content">{{ respuesta.content|linebreaks }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-comments">
+                <div class="no-comments-illustration">
+                    <div class="empty-icon">💭</div>
+                    <div class="empty-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <h4 class="no-comments-title">¡Sé el primero en comentar!</h4>
+                <p class="no-comments-text">
+                    No hay comentarios aún. Comparte tu opinión y comienza la conversación.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
     <div class="post-footer text-center">
         <a href="{% url 'home' %}" class="btn-outline">← Volver al inicio</a>
     </div>
 </div>
 
-<!-- Estilos locales del detalle -->
+<!-- ESTILOS MEJORADOS -->
 <style>
 /* Layout básico */
-.post-wrapper { padding: 0 1rem; }
+.post-wrapper { 
+    padding: 0 1rem; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
 /* Breadcrumb */
-.back-link { color: #0d6efd; text-decoration: none; }
-.back-link:hover { text-decoration: underline; }
+.back-link { 
+    color: #0d6efd; 
+    text-decoration: none; 
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.back-link:hover { 
+    text-decoration: underline; 
+    color: #0b5ed7;
+}
 
 /* Encabezado */
 .post-title {
@@ -450,87 +288,627 @@
     margin: 0.2rem 0 0.6rem 0;
     letter-spacing: -0.3px;
     color: #0d6efd;
+    font-weight: 700;
 }
-.post-meta { color: #6c757d; font-size: 0.95rem; }
+
+.post-meta { 
+    color: #6c757d; 
+    font-size: 0.95rem; 
+    margin-bottom: 1.5rem;
+}
 .post-meta .dot { margin: 0 0.5rem; color: #adb5bd; }
 .badge-cat {
     display: inline-block;
-    background: #e9f2ff;
+    background: linear-gradient(135deg, #e9f2ff, #cfe2ff);
     color: #0b5ed7;
     border: 1px solid #cfe2ff;
-    padding: 0.12rem 0.5rem;
+    padding: 0.15rem 0.6rem;
     border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 600;
 }
-.meta-sep { margin: 1rem auto 1.5rem; max-width: 140px; border: 0; border-top: 2px solid #e9ecef; }
+
+.post-admin-actions {
+    margin: 1.5rem 0;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.btn-admin {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-admin-danger {
+    background: #dc3545;
+    color: white;
+}
+.btn-admin-danger:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.btn-admin-warning {
+    background: #ffc107;
+    color: #212529;
+}
+.btn-admin-warning:hover {
+    background: #e0a800;
+    transform: translateY(-1px);
+}
+
+.meta-sep { 
+    margin: 1rem auto 1.5rem; 
+    max-width: 140px; 
+    border: 0; 
+    border-top: 2px solid #e9ecef; 
+}
 
 /* Imagen */
-.post-figure { margin: 0 auto 1.5rem; text-align: center; }
+.post-figure { 
+    margin: 0 auto 2rem; 
+    text-align: center; 
+}
 .post-image {
     max-width: 100%;
     height: auto;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease;
 }
-.img-caption { color: #8a8f98; font-size: 0.85rem; margin-top: 0.5rem; }
+.post-image:hover {
+    transform: scale(1.02);
+}
+.img-caption { 
+    color: #8a8f98; 
+    font-size: 0.85rem; 
+    margin-top: 0.75rem; 
+    font-style: italic;
+}
 
 /* Contenido */
-.post-content { font-size: 1.1rem; line-height: 1.75; color: #2b2f36; }
-.post-content p { margin: 0 0 1.1rem 0; }
-.post-content h2 { font-size: 1.5rem; margin: 2rem 0 0.8rem; color: #1e293b; }
-.post-content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.6rem; color: #334155; }
-.post-content ul, .post-content ol { padding-left: 1.2rem; margin-bottom: 1.1rem; }
-.post-content blockquote {
-    border-left: 4px solid #0d6efd;
-    background: #f1f6ff;
-    color: #2b2f36;
-    margin: 1.2rem 0;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
+.post-content { 
+    font-size: 1.1rem; 
+    line-height: 1.8; 
+    color: #2b2f36; 
+    margin-bottom: 3rem;
+}
+.post-content p { margin: 0 0 1.2rem 0; }
+.post-content h2 { 
+    font-size: 1.6rem; 
+    margin: 2.5rem 0 1rem; 
+    color: #1e293b; 
+    font-weight: 700;
+}
+.post-content h3 { 
+    font-size: 1.3rem; 
+    margin: 2rem 0 0.8rem; 
+    color: #334155; 
+    font-weight: 600;
 }
 
 /* Botón Me gusta */
-.post-actions { display: flex; justify-content: center; margin: 2rem 0 2.5rem; }
+.post-actions { 
+    display: flex; 
+    justify-content: center; 
+    margin: 2rem 0 3rem; 
+}
 .btn-like {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     border: 2px solid #dc3545;
     color: #dc3545;
     background: #fff;
-    padding: 0.6rem 1rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 999px;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: all .2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
 }
-.btn-like:hover { background: #ffe5e8; transform: translateY(-1px); }
-.btn-like.is-liked { background: #dc3545; color: #fff; }
-.btn-like.is-liked:hover { filter: brightness(0.95); }
-.btn-like.is-ghost { border-color: #ced4da; color: #6c757d; }
+.btn-like:hover { 
+    background: #ffe5e8; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+}
+.btn-like.is-liked { 
+    background: #dc3545; 
+    color: #fff; 
+}
+.btn-like.is-liked:hover { 
+    filter: brightness(1.1); 
+    transform: translateY(-2px);
+}
+.btn-like.is-ghost { 
+    border-color: #ced4da; 
+    color: #6c757d; 
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
 .btn-like .like-count {
-    background: rgba(220,53,69,0.1);
+    background: rgba(220,53,69,0.15);
     color: inherit;
     border-radius: 999px;
-    padding: 0.1rem 0.5rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* ESTILOS DE COMENTARIOS MEJORADOS */
+.comments-section {
+    margin-top: 4rem;
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid #e2e8f0;
+}
+
+.comments-divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    gap: 1rem;
+}
+
+.divider-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+}
+
+.divider-icon {
+    font-size: 1.5rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Formulario de comentarios */
+.comment-form-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.comment-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-title {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.title-icon {
+    font-size: 1.2rem;
+}
+
+.textarea-container {
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.95);
+    font-size: 1rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.8);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.submit-btn {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 6px 20px rgba(76,175,80,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76,175,80,0.6);
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.submit-btn:hover .btn-shine {
+    left: 100%;
+}
+
+/* Login prompt */
+.login-prompt {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.login-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.login-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-text {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #5d4037;
+    font-weight: 500;
+}
+
+.login-link {
+    color: #d32f2f;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    border-bottom-color: #d32f2f;
+}
+
+/* Header de comentarios */
+.comments-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.comments-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.comments-count {
+    color: #64748b;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* Lista de comentarios */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.comment-item {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.comment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.comment-card {
+    display: flex;
+    padding: 1.5rem;
+    gap: 1rem;
+}
+
+.comment-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+}
+
+.avatar-small {
+    width: 36px;
+    height: 36px;
     font-size: 0.9rem;
 }
 
-/* Botón volver */
-.post-footer { margin-top: 1rem; }
-.btn-outline {
-    display: inline-block;
-    border: 1.5px solid #0d6efd;
-    color: #0d6efd;
-    padding: 0.5rem 0.9rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all .2s ease;
+.comment-main {
+    flex: 1;
+    min-width: 0;
 }
-.btn-outline:hover { background: #0d6efd; color: #fff; }
-</style>
-{% endblock %}
 
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.comment-author {
+    color: #667eea;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.comment-date {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.comment-actions {
+    margin-left: auto;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.btn-delete:hover {
+    background: rgba(220,53,69,0.1);
+}
+
+.comment-content {
+    color: #2c3e50;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.comment-footer {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-reply, .btn-show-replies {
+    background: none;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+
+.btn-reply:hover, .btn-show-replies:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* Formulario de respuesta */
+.reply-form-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.reply-input-container {
+    margin-bottom: 0.75rem;
+}
+
+.reply-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.reply-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}
+
+.reply-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background: none;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-cancel:hover {
+    background: #f1f5f9;
+}
+
+.btn-reply-submit {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+}
+
+.btn-reply-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+}
+
+/* Respuestas */
+.replies-container {
+    margin-top: 1rem;
+    border-left: 3px solid #e2e8f0;
+    padding-left: 1rem;
+}
+
+.reply-item {
+    margin-bottom: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.reply-card {
+    display: flex;
+    padding: 1rem;
+    gap: 0.75rem;
+}
+
+.reply-avatar {
+    flex-shrink: 0;
+}
+
+.reply-main {
+    flex: 1;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.reply-author {
+    color: #667eea;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.reply-date {
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+</style>
+<script>
+function toggleReplyForm(id) {
+  const form = document.getElementById('reply-form-' + id);
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+<script>
+function toggleReplies(id) {
+  const replies = document.getElementById('replies-' + id);
+  if (replies) {
+    replies.style.display = replies.style.display === 'none' ? 'block' : 'none';
+  }
+}
+</script>
+{% endblock %}

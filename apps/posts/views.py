@@ -94,11 +94,8 @@ def crear_post(request):
 @login_required
 def post_detail(request, pk):
     post = get_object_or_404(Noticia, pk=pk)
-    liked = False
-    if request.user.is_authenticated:
-        liked = post.likes.filter(id=request.user.id).exists()
+    liked = post.likes.filter(id=request.user.id).exists() if request.user.is_authenticated else False
 
-    # Comentarios
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -110,11 +107,13 @@ def post_detail(request, pk):
     else:
         comment_form = CommentForm()
 
+    comments = post.comments.filter(parent__isnull=True).order_by('-created_at')
+
     return render(request, 'posts/post_detail.html', {
         'post': post,
         'liked': liked,
         'comment_form': comment_form,
-        'comments': post.comments.all()
+        'comments': comments
     })
 @login_required
 def like_post(request, pk):
