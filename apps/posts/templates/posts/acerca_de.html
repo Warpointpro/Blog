@@ -7,18 +7,335 @@
 
 {% block extra_css %}
     <style>
-        /* Estilos específicos para esta página */
-        .profile-card { text-align: center; margin-bottom: 20px; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; }
+        /* Variables CSS para consistencia */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --text-light: #7f8c8d;
+            --border-radius: 12px;
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Contenedor principal mejorado */
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Hero section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--border-radius);
+            margin: -2rem -2rem 3rem -2rem;
+            padding: 3rem 2rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Sección de misión/visión */
+        .mission-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .mission-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition-smooth);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .mission-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .mission-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Logo/Imagen mejorada */
+        .brand-section {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--primary-color);
+        }
+
+        .brand-logo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 1rem auto;
+            display: block;
+            border: 4px solid white;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-title {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.3rem;
+        }
+
+        .brand-subtitle {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Sección de valores */
+        .values-section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            background: white;
+            border: 2px solid #e9ecef;
+            transition: var(--transition-smooth);
+        }
+
+        .value-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-item h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .value-item p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 3rem;
+        }
+
+        .cta-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .about-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .hero-section {
+                margin: -1.5rem -1.5rem 2rem -1.5rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-description {
+                font-size: 1.1rem;
+            }
+
+            .brand-logo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .mission-section,
+            .values-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Animaciones sutiles */
+        .about-container > * {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .hero-section { animation-delay: 0.1s; }
+        .mission-section { animation-delay: 0.2s; }
+        .brand-section { animation-delay: 0.3s; }
+        .values-section { animation-delay: 0.4s; }
+        .cta-section { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-    <h2>Quiénes somos</h2>
-    <p>Somos un equipo de entusiastas de la tecnología que busca compartir conocimiento sobre Django y el desarrollo web.</p>
-    <div class="profile-card">
-        <h3 style="text-align: center;">Nuestra foto de perfil</h3>
-        <img src="{% static 'posts/LOGO.png' %}" alt="Foto de Perfil" class="profile-img" width="200" height="200" style="display: block; margin: 0 auto;">
+    <div class="about-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Quiénes Somos</h1>
+        <p class="hero-description">
+            Un equipo apasionado por la tecnología que comparte conocimiento y experiencias sobre programación y desarrollo web.
+        </p>
+    </section>
+
+    <!-- Misión y Visión -->
+    <section class="mission-section">
+        <div class="mission-card">
+            <h3>🎯 Nuestra Misión</h3>
+            <p>
+                Hacer accesible el conocimiento tecnológico e inspirar a todos los que quieran aprender y crecer en programación.
+            </p>
+        </div>
+        <div class="mission-card">
+            <h3>🚀 Nuestra Visión</h3>
+            <p>
+                Ser la de referencia para desarrolladores, impulsando aprendizaje, crecimiento e innovación.
+            </p>
+        </div>
+    </section>
+</div>
+
+
+        <!-- Logo/Identidad Visual -->
+        <section class="brand-section">
+            <h3 class="brand-title">NUESTRO LOGO</h3>
+            <img src="{% static 'posts/LOGO.png' %}" alt="Logo del Blog de Programación" class="brand-logo">
+            <p class="brand-subtitle">
+                Más que un logo, es el símbolo de nuestra pasión por la tecnología y el aprendizaje continuo.
+            </p>
+        </section>
+
+        <!-- Valores -->
+        <section class="values-section">
+            <h2 class="section-title">Nuestros Valores</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">🤝</div>
+                    <h4>Colaboración</h4>
+                    <p>Creemos en el poder de la comunidad y el aprendizaje colaborativo.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">💡</div>
+                    <h4>Innovación</h4>
+                    <p>Buscamos siempre las mejores prácticas y tecnologías emergentes.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">📚</div>
+                    <h4>Educación</h4>
+                    <p>El conocimiento debe ser accesible y comprensible para todos.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">🎯</div>
+                    <h4>Calidad</h4>
+                    <p>Nos comprometemos con contenido preciso, actualizado y útil.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h3>¡Únete a Nuestra Comunidad!</h3>
+            <p>
+                Compartimos nuestros conocimientos y brindamos ayuda a toda clase de personas, 
+                tanto novatas como experimentadas en este apasionante campo de la programación. 
+                Juntos, construiremos un futuro mejor y más accesible para todos los interesados en la tecnología.
+            </p>
+        </section>
     </div>
-    <h3>Compartimos nuestros conocimientos y brindamos ayuda a toda clase de gente tanto novata como experimentada en este campo.</h3>
 {% endblock %}
