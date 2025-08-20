@@ -225,6 +225,15 @@
                                             <div class="reply-header">
                                                 <span class="reply-author">{{ respuesta.author.username }}</span>
                                                 <span class="reply-date">{{ respuesta.created_at|date:"d M Y H:i" }}</span>
+                                                {% if respuesta.author == user or user.is_superuser %}
+<form method="post" action="{% url 'borrar_comentario' respuesta.pk %}" class="delete-form" style="margin-left: auto;">
+    {% csrf_token %}
+    <button type="submit" class="btn-delete"
+            onclick="return confirm('¿Seguro que quieres borrar esta respuesta?')">
+        <span class="delete-icon">🗑️</span>
+    </button>
+</form>
+{% endif %}
                                             </div>
                                             <div class="reply-content">{{ respuesta.content|linebreaks }}</div>
                                         </div>
