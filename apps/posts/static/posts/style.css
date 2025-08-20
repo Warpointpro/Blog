@@ -370,3 +370,32 @@ h2 {
 
 
 
+
+
+form input[type="text"],
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+form textarea {
+  min-height: 250px;
+  resize: vertical;
+}
+.card-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #007bff;
+}
+.btn-primary,
+.btn-outline-secondary {
+  padding: 10px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+}
+.container {
+  max-width: 900px !important;
+}

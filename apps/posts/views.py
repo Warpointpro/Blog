@@ -190,4 +190,8 @@ def agregar_comentario(request, pk):
         'comentarios': post.comments.all().order_by('-created_at'),
         'liked': liked,
     })
-
+def borrar_comentario(request, pk):
+    comentario = get_object_or_404(Comment, pk=pk)
+    if comentario.author == request.user or request.user.is_superuser:
+        comentario.delete()
+    return redirect('post_detail', pk=comentario.post.pk)

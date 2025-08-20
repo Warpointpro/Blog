@@ -16,6 +16,5 @@ urlpatterns = [
     path('post/<int:pk>/borrar/', NoticiaDeleteView.as_view(), name='borrar_post'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/editar/', NoticiaUpdateView.as_view(), name='editar_post'),
+    path('comentario/<int:pk>/borrar/', views.borrar_comentario, name='borrar_comentario'),
 ]
-
-        

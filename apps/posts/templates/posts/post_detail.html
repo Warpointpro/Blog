@@ -24,7 +24,7 @@
         </div>
 
         {% if user.is_authenticated and user == post.autor or user.is_staff %}
-    <form method="post" action="{% url 'borrar_post' post.pk %}" style="margin-top: 1rem;">
+    <form method="post" action="{% url 'borrar_post' post.pk %}" style="margin-top: 2rem;">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger"
                 onclick="return confirm('¿Seguro que quieres borrar este post?')">
@@ -34,7 +34,7 @@
         {% endif %}
 {% if user.is_authenticated %}
     {% if user == post.autor or user.is_staff %}
-        <a href="{% url 'editar_post' post.pk %}" class="btn btn-warning" style="margin-top: 0.5rem;">
+        <a href="{% url 'editar_post' post.pk %}" class="btn btn-warning" style="margin-top: 1rem;">
             ✏️ Editar este post
         </a>
     {% endif %}
@@ -383,14 +383,21 @@
         <!-- Encabezado de comentarios -->
         {% if comments %}
   {% for comentario in comments %}
-    <div class="comment-card">
-      <div class="comment-content">{{ comentario.content }}</div>
-      <div class="comment-meta">
-        <span class="comment-author">👤 {{ comentario.author.username }}</span>
+<div class="comment-card">
+    <div class="comment-content">{{ comentario.content }}</div>
+    <div class="comment-meta">
+        <span class="comment-author">🗣 {{ comentario.author.username }}</span>
         <span class="comment-date">{{ comentario.created_at|date:"d M Y H:i" }}</span>
-      </div>
     </div>
-  {% endfor %}
+
+    {% if comentario.author == user or user.is_superuser %}
+    <form method="post" action="{% url 'borrar_comentario' comentario.pk %}" class="delete-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">🗑️ Borrar</button>
+    </form>
+    {% endif %}
+</div>
+{% endfor %}
 {% else %}
   <div class="no-comments">
     <div class="no-comments-icon">💭</div>
