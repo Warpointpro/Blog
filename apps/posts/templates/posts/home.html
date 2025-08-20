@@ -19,9 +19,13 @@
             <option value="asc" {% if request.GET.fecha == "asc" %}selected{% endif %}>Antiguo primero</option>
             <option value="desc" {% if request.GET.fecha == "desc" %}selected{% endif %}>Reciente primero</option>
         </select>
+        <select name="comentarios">
+        <option value="">Todos</option>
+        <option value="con" {% if request.GET.noticias == "con" %}selected{% endif %}>Con comentarios</option>
+        <option value="sin" {% if request.GET.noticias == "sin" %}selected{% endif %}>Sin comentarios</option>
+</select>
         <button type="submit">Filtrar</button>
     </form>
-
     <h2>Últimos Posteos</h2>
     {% if page_obj %}
     {% for noticia in page_obj %}

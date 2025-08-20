@@ -20,9 +20,16 @@ def home(request):
     q = request.GET.get('q', '')               # texto de búsqueda
     categoria_id = request.GET.get('categoria', '')  # id categoría
     fecha = request.GET.get('fecha', '')       # asc / desc
+    comentarios = request.GET.get('comentarios', '')
 
     # 2. Iniciar el queryset base
     noticias = Noticia.objects.all()
+
+    # Filtrar por comentarios (con/sin)
+    if comentarios == "con":
+        noticias = noticias.filter(comments__isnull=False).distinct()
+    elif comentarios == "sin":
+        noticias = noticias.filter(comments__isnull=True)
 
     # 3. Filtrar por búsqueda en título o contenido
     if q:
