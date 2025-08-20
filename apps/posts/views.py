@@ -91,7 +91,7 @@ def crear_post(request):
         form = PostForm()
     return render(request, 'posts/crear_noticia.html', {'form': form})
 
-@login_required
+
 def post_detail(request, pk):
     post = get_object_or_404(Noticia, pk=pk)
     liked = post.likes.filter(id=request.user.id).exists() if request.user.is_authenticated else False
@@ -194,6 +194,7 @@ def borrar_comentario(request, pk):
     if comentario.author == request.user or request.user.is_superuser:
         comentario.delete()
     return redirect('post_detail', pk=comentario.post.pk)
+@login_required
 def like_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.user in comment.likes.all():
