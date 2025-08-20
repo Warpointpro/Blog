@@ -17,18 +17,19 @@ class Noticia(models.Model):
     likes = models.ManyToManyField(User, related_name='noticia_likes', blank=True)
 def __str__(self):
         return self.titulo
-
 def total_likes(self):
         return self.likes.count()
 class Comment(models.Model):
+    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
     post = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
-
     def __str__(self):
         return f"Comentario de {self.author} en {self.post}"
-
     def is_reply(self):
         return self.parent is not None
+
+    def total_likes(self):
+        return self.likes.count()

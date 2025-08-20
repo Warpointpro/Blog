@@ -194,3 +194,10 @@ def borrar_comentario(request, pk):
     if comentario.author == request.user or request.user.is_superuser:
         comentario.delete()
     return redirect('post_detail', pk=comentario.post.pk)
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+    else:
+        comment.likes.add(request.user)
+    return redirect('post_detail', pk=comment.post.id)

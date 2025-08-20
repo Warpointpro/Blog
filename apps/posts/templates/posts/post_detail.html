@@ -148,6 +148,16 @@
             <div class="comments-list">
                 {% for comentario in comments %}
                 <div class="comment-item" data-comment-id="{{ comentario.id }}">
+                    <form method="post" action="{% url 'like_comment' comentario.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-reply">
+        {% if user in comentario.likes.all %}
+            ❤️ Quitar Like ({{ comentario.total_likes }})
+        {% else %}
+            🤍 Me gusta ({{ comentario.total_likes }})
+        {% endif %}
+    </button>
+</form>
                     <div class="comment-card">
                         <div class="comment-avatar">
                             <div class="avatar-circle">
@@ -186,7 +196,6 @@
                                 </button>
                                 {% endif %}
                             </div>
-
                             <!-- Formulario de respuesta -->
                             {% if user.is_authenticated %}
                             <div id="reply-form-{{ comentario.id }}" class="reply-form-container" style="display: none;">
@@ -214,6 +223,16 @@
                             {% if comentario.replies.all %}
                             <div id="replies-{{ comentario.id }}" class="replies-container" style="display: none;">
                                 {% for respuesta in comentario.replies.all %}
+                                <form method="post" action="{% url 'like_comment' respuesta.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-reply">
+        {% if user in respuesta.likes.all %}
+            ❤️ Quitar Like ({{ respuesta.total_likes }})
+        {% else %}
+            🤍 Me gusta ({{ respuesta.total_likes }})
+        {% endif %}
+    </button>
+</form>
                                 <div class="reply-item">
                                     <div class="reply-card">
                                         <div class="reply-avatar">
