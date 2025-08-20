@@ -28,4 +28,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comentario de {self.author} en {self.post}"
-

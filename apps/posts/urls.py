@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import NoticiaDeleteView
+from .views import NoticiaUpdateView
 urlpatterns = [
     path('', views.home, name='home'),
    path('acerca_de/', views.about, name='acerca_de'),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('post/<int:pk>/borrar/', NoticiaDeleteView.as_view(), name='borrar_post'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
+    path('post/<int:pk>/editar/', NoticiaUpdateView.as_view(), name='editar_post'),
 ]
 
         

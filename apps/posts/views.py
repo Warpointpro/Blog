@@ -4,13 +4,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
-from .models import Noticia
+from .models import Noticia, Comment
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import UpdateView
+from .forms import CommentForm, PostForm
+
 def home(request):
     # 1. Capturar parámetros del formulario
     q = request.GET.get('q', '')               # texto de búsqueda
@@ -86,7 +90,6 @@ def crear_post(request):
     else:
         form = PostForm()
     return render(request, 'posts/crear_noticia.html', {'form': form})
-from .forms import CommentForm, PostForm
 
 @login_required
 def post_detail(request, pk):
@@ -127,11 +130,6 @@ def like_post(request, pk):
 def logout_view(request):
     logout(request)
     return redirect('home')
-from django.urls import reverse_lazy
-from django.views.generic import DeleteView
-from django.contrib import messages
-from .models import Noticia
-
 class NoticiaDeleteView(DeleteView):
     model = Noticia
     template_name = 'posts/confirmar_borrado.html'
@@ -148,3 +146,48 @@ class NoticiaDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "El post fue borrado con éxito ✅")
         return super().delete(request, *args, **kwargs)
+
+class NoticiaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Noticia
+    form_class = PostForm
+    template_name = 'posts/editar_noticia.html'
+
+    def test_func(self):
+        noticia = self.get_object()
+        # Solo el autor o staff pueden editar
+        return self.request.user == noticia.autor or self.request.user.is_staff
+
+    def handle_no_permission(self):
+        messages.error(self.request, "No tienes permiso para editar este post.")
+        return redirect('post_detail', pk=self.get_object().pk)
+
+    def form_valid(self, form):
+        messages.success(self.request, "El post fue editado con éxito ✅")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.pk})
+def agregar_comentario(request, pk):
+    post = get_object_or_404(Noticia, pk=pk)
+    if request.user.is_authenticated:
+        liked = post.likes.filter(id=request.user.id).exists()
+    else:
+        liked = False
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.post = post
+            comentario.author = request.user
+            comentario.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+
+    return render(request, 'post_detail.html', {
+        'post': post,
+        'form': form,
+        'comentarios': post.comments.all().order_by('-created_at'),
+        'liked': liked,
+    })
+

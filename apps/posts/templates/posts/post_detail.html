@@ -32,7 +32,13 @@
         </button>
     </form>
         {% endif %}
-
+{% if user.is_authenticated %}
+    {% if user == post.autor or user.is_staff %}
+        <a href="{% url 'editar_post' post.pk %}" class="btn btn-warning" style="margin-top: 0.5rem;">
+            ✏️ Editar este post
+        </a>
+    {% endif %}
+{% endif %}
         <hr class="meta-sep">
     </header>
 
@@ -349,7 +355,8 @@
         <div class="comment-form-container">
             <h4 class="form-title">💭 Comparte tu opinión</h4>
             <form method="post">
-                <!-- Django CSRF token aquí -->
+                <!-- Django CSRF token aquí -->         
+                 {% csrf_token %}
                 <div class="form-group">
                     <label for="comment">Tu comentario:</label>
                     <textarea 
@@ -374,15 +381,22 @@
         </div>
 
         <!-- Encabezado de comentarios -->
-        <div class="comments-header">
-            <span class="comments-icon">💬</span>
-            <h3>Comentarios</h3>
-        </div>
-        <!-- Mensaje cuando no hay comentarios -->
-        <div class="no-comments" style="display: none;">
-            <div class="no-comments-icon">💭</div>
-            <p>No hay comentarios aún. ¡Sé el primero en compartir tu opinión!</p>
-        </div>
+        {% if comments %}
+  {% for comentario in comments %}
+    <div class="comment-card">
+      <div class="comment-content">{{ comentario.content }}</div>
+      <div class="comment-meta">
+        <span class="comment-author">👤 {{ comentario.author.username }}</span>
+        <span class="comment-date">{{ comentario.created_at|date:"d M Y H:i" }}</span>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="no-comments">
+    <div class="no-comments-icon">💭</div>
+    <p>No hay comentarios aún. ¡Sé el primero en compartir tu opinión!</p>
+  </div>
+{% endif %}
     </div>
 
     <script>
