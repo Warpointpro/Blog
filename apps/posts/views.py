@@ -1,11 +1,9 @@
-from django.shortcuts import render
-from apps.posts.forms import CustomUserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from .models import Noticia, Comment
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
@@ -14,7 +12,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import UpdateView
 from .forms import CommentForm, PostForm
-
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 def home(request):
     # 1. Capturar parámetros del formulario
     q = request.GET.get('q', '')               # texto de búsqueda
@@ -81,9 +80,6 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     next_page = 'login' # Redirige a la página de login después del logout
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import PostForm
 
 @login_required
 def crear_post(request):

@@ -1,72 +1,156 @@
 {% extends 'base.html' %}
 {% load static %}
-
+<!-- Título específico de la página de inicio -->
 {% block title %}Inicio - Blog de Ayuda a Programadores{% endblock %}
 
 {% block content %}
-    <form method="get" class="search-bar">
-        <input type="text" name="q" placeholder="Buscar posteos..." value="{{ request.GET.q }}">
-        <select name="categoria">
-            <option value="">Todas las categorías</option>
-            {% for cat in categorias %}
-                <option value="{{ cat.id }}" {% if request.GET.categoria == cat.id|stringformat:"s" %}selected{% endif %}>
-                    {{ cat.nombre }}
+    <!-- Barra de búsqueda y filtros -->
+    <section class="search-section">
+        <form method="get" class="search-bar">
+            <!-- Campo de búsqueda principal -->
+            <input 
+                type="text" 
+                name="q" 
+                placeholder="Buscar posteos..." 
+                value="{{ request.GET.q }}"
+                class="search-input"
+            >
+            
+            <!-- Filtro por categoría -->
+            <select name="categoria" class="filter-select">
+                <option value="">Todas las categorías</option>
+                {% for cat in categorias %}
+                    <option 
+                        value="{{ cat.id }}" 
+                        {% if request.GET.categoria == cat.id|stringformat:"s" %}selected{% endif %}
+                    >
+                        {{ cat.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+            
+            <!-- Filtro por fecha -->
+            <select name="fecha" class="filter-select">
+                <option value="">Orden por fecha</option>
+                <option value="asc" {% if request.GET.fecha == "asc" %}selected{% endif %}>
+                    Más antiguos primero
                 </option>
-            {% endfor %}
-        </select>
-        <select name="fecha">
-            <option value="">Orden por fecha</option>
-            <option value="asc" {% if request.GET.fecha == "asc" %}selected{% endif %}>Antiguo primero</option>
-            <option value="desc" {% if request.GET.fecha == "desc" %}selected{% endif %}>Reciente primero</option>
-        </select>
-        <select name="comentarios">
-        <option value="">Todos</option>
-        <option value="con" {% if request.GET.noticias == "con" %}selected{% endif %}>Con comentarios</option>
-        <option value="sin" {% if request.GET.noticias == "sin" %}selected{% endif %}>Sin comentarios</option>
-</select>
-        <button type="submit">Filtrar</button>
-    </form>
-    <h2>Últimos Posteos</h2>
-    {% if page_obj %}
-    {% for noticia in page_obj %}
-            <article class="post">
-                <h3>
-                    <a href="{% url 'post_detail' noticia.pk %}">{{ noticia.titulo }}</a>
-                </h3>
+                <option value="desc" {% if request.GET.fecha == "desc" %}selected{% endif %}>
+                    Más recientes primero
+                </option>
+            </select>
+            
+            <!-- Filtro por comentarios - CORREGIDO -->
+            <select name="comentarios" class="filter-select">
+                <option value="">Todos los posts</option>
+                <option value="con" {% if request.GET.comentarios == "con" %}selected{% endif %}>
+                    Con comentarios
+                </option>
+                <option value="sin" {% if request.GET.comentarios == "sin" %}selected{% endif %}>
+                    Sin comentarios
+                </option>
+            </select>
+            
+            <!-- Botón de búsqueda -->
+            <button type="submit" class="btn-search">Buscar</button>
+        </form>
+    </section>
 
-                <div class="post-meta">
-                    <small>Categoría: {{ noticia.categoria.nombre }}</small>
-                    <small>Autor: {{ noticia.autor.username }}</small>
-                    <small>Fecha: {{ noticia.fecha|date:"d M Y" }}</small>
-                </div>
-                
-                {% if noticia.imagen %}
-                    <a href="{% url 'post_detail' noticia.pk %}">
-                        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+    <!-- Título de la sección de posts -->
+    <h2 class="section-title">Últimos Posteos</h2>
+    
+    <!-- Lista de posts -->
+    <section class="posts-container">
+        {% if page_obj %}
+            {% for noticia in page_obj %}
+                <!-- Artículo individual -->
+                <article class="post">
+                    <!-- Título del post -->
+                    <h3 class="post-title">
+                        <a href="{% url 'post_detail' noticia.pk %}">
+                            {{ noticia.titulo }}
+                        </a>
+                    </h3>
+
+                    <!-- Metadatos del post -->
+                    <div class="post-meta">
+                        <span class="meta-item">
+                            <strong>Categoría:</strong> {{ noticia.categoria.nombre }}
+                        </span>
+                        <span class="meta-item">
+                            <strong>Autor:</strong> {{ noticia.autor.username }}
+                        </span>
+                        <span class="meta-item">
+                            <strong>Fecha:</strong> {{ noticia.fecha|date:"d M Y" }}
+                        </span>
+                    </div>
+                    
+                    <!-- Imagen del post (si existe) -->
+                    {% if noticia.imagen %}
+                        <div class="post-image">
+                            <a href="{% url 'post_detail' noticia.pk %}">
+                                <img 
+                                    src="{{ noticia.imagen.url }}" 
+                                    alt="{{ noticia.titulo }}"
+                                    loading="lazy"
+                                >
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <!-- Extracto del contenido -->
+                    <div class="post-excerpt">
+                        <p>{{ noticia.contenido|truncatewords:30 }}</p>
+                    </div>
+                    
+                    <!-- Enlace para leer más -->
+                    <a href="{% url 'post_detail' noticia.pk %}" class="read-more">
+                        Leer artículo completo →
+                    </a>
+                </article>
+            {% endfor %}
+        {% else %}
+            <!-- Mensaje cuando no hay posts -->
+            <div class="no-posts">
+                <p>No se encontraron publicaciones que coincidan con tu búsqueda.</p>
+                <a href="{% url 'home' %}" class="btn-reset">Ver todos los posts</a>
+            </div>
+        {% endif %}
+    </section>
+    
+    <!-- Paginación -->
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="pagination">
+            <!-- Botón anterior -->
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.comentarios %}&comentarios={{ request.GET.comentarios }}{% endif %}" 
+                   class="page-link prev">
+                    ← Anterior
+                </a>
+            {% endif %}
+            
+            <!-- Números de página -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <span class="page-current">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.comentarios %}&comentarios={{ request.GET.comentarios }}{% endif %}" 
+                       class="page-link">
+                        {{ num }}
                     </a>
                 {% endif %}
-
-                <p>{{ noticia.contenido|truncatewords:30 }}</p>
-                <a href="{% url 'post_detail' noticia.pk %}" class="read-more">Leer más</a>
-            </article>
-        {% endfor %}
-    {% else %}
-        <p>No hay publicaciones que coincidan con el filtro.</p>
+            {% endfor %}
+            
+            <!-- Botón siguiente -->
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.comentarios %}&comentarios={{ request.GET.comentarios }}{% endif %}" 
+                   class="page-link next">
+                    Siguiente →
+                </a>
+            {% endif %}
+        </nav>
     {% endif %}
-    <div class="pagination">
-    {% for num in page_obj.paginator.page_range %}
-        {% if num == page_obj.number %}
-            <span class="current">{{ num }}</span>
-        {% else %}
-            <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}">
-                {{ num }}
-            </a>
-        {% endif %}
-    {% endfor %}
-</div>
-
-<style>
-.pagination {
+    <style>.pagination {
     display: flex;
     gap: .5rem;
     justify-content: center;
@@ -92,6 +176,4 @@
     color: #fff;
 }
 </style>
-
 {% endblock %}
-

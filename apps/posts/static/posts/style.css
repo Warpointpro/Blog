@@ -1,53 +1,101 @@
 /* ==============================================
-   STYLE.CSS - BLOG
+   STYLE.CSS - BLOG DE AYUDA A PROGRAMADORES
    ==============================================
-   Autor: Danilo
+   Autor: Jonathan & Danilo
    ==============================================
 */
 
 /* ---------------------------
-   1. Variables y Estilos Globales
-   ---------------------------
-*/
+   1. VARIABLES Y ESTILOS GLOBALES
+   --------------------------- */
 :root {
-    --color-fondo: #f0f2f5;
-    --color-principal: #ffffff;
-    --color-texto-oscuro: #2c3e50;
-    --color-texto-secundario: #596a7b;
-    --color-acento-primario: #3498db;
-    --color-acento-secundario: #f39c12;
-    --color-borde: #d1d5da;
-    --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --sombra-elevada: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --radio-borde: 12px;
+    /* Paleta de colores moderna y profesional */
+    --color-fondo: #f8f9fa;
+    --color-superficie: #ffffff;
+    --color-primario: #007bff;
+    --color-primario-oscuro: #0056b3;
+    --color-texto-principal: #212529;
+    --color-texto-secundario: #6c757d;
+    --color-borde: #dee2e6;
+    --color-acento: #dc3545;
+    --color-acento-oscuro: #b02a37;
+    --color-exito: #28a745;
+    --color-exito-oscuro: #218838;
+
+    /* Tipografía */
     --fuente-principal: 'Poppins', sans-serif;
+    --fuente-titulos: 'Georgia', serif;
+
+    /* Sombras suaves para dar profundidad */
+    --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --sombra-media: 0 8px 15px rgba(0, 0, 0, 0.08);
+    --sombra-fuerte: 0 12px 25px rgba(0, 0, 0, 0.12);
+
+    /* Otros */
+    --radio-borde: 10px;
+    --transicion-rapida: all 0.25s ease-in-out;
+    --espaciado-base: 1rem;
+}
+
+/* Reseteo básico y estilos del body */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     background-color: var(--color-fondo);
     font-family: var(--fuente-principal);
-    color: var(--color-texto-oscuro);
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+    color: var(--color-texto-principal);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+/* Enlaces globales */
+a {
+    color: inherit;
+    transition: var(--transicion-rapida);
 }
 
 /* ---------------------------
-   2. Encabezado y Navegación (base.html)
-   ---------------------------
-*/
+   2. LAYOUT Y CONTENEDOR PRINCIPAL
+   --------------------------- */
+.container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Títulos principales */
+h2, .section-title {
+    font-size: 2rem;
+    font-family: var(--fuente-titulos);
+    padding-bottom: 10px;
+    margin: 0 0 35px 0;
+    border-bottom: 2px solid var(--color-primario);
+    color: var(--color-texto-principal);
+}
+
+/* ---------------------------
+   3. ENCABEZADO Y NAVEGACIÓN
+   --------------------------- */
 .header {
-    background-color: var(--color-texto-oscuro);
-    color: var(--color-principal);
-    padding: 1em 2em;
+    background-color: var(--color-superficie);
+    padding: 1.2rem 2rem;
     box-shadow: var(--sombra-suave);
+    border-bottom: 1px solid var(--color-borde);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .header-title {
-    font-family: 'Georgia', serif;
+    font-family: var(--fuente-titulos);
     text-align: center;
-    font-size: 2.5em;
-    margin: 0 0 0.5em 0;
+    font-size: 2.2rem;
+    color: var(--color-texto-principal);
+    margin: 0 0 1rem 0;
 }
 
 .nav {
@@ -55,347 +103,493 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .nav-links, .nav-user {
     display: flex;
     align-items: center;
-    gap: 15px; /* Espacio uniforme entre elementos */
+    gap: 1.5rem;
 }
 
+/* Enlaces de navegación */
 .nav a {
-    color: var(--color-principal);
+    color: var(--color-texto-secundario);
     text-decoration: none;
-    padding: 5px;
     font-weight: 500;
-    transition: color 0.3s ease;
+    position: relative;
+    padding: 5px 0;
+    transition: var(--transicion-rapida);
+}
+
+/* Efecto de subrayado animado */
+.nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color-primario);
+    transition: width 0.3s ease;
 }
 
 .nav a:hover {
-    color: var(--color-acento-secundario);
+    color: var(--color-texto-principal);
 }
 
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* Saludo al usuario */
 .user-greeting {
     font-weight: 500;
+    color: var(--color-texto-principal);
 }
 
-.btn-create-post {
-    background-color: var(--color-acento-primario);
-    padding: 8px 15px;
+/* ---------------------------
+   4. SISTEMA DE BOTONES
+   --------------------------- */
+
+/* Estilo base para todos los botones */
+button,
+.btn-create-post,
+.btn-logout,
+.btn-admin,
+.btn-login,
+.btn-register,
+.btn-search,
+.btn-reset {
+    padding: 10px 20px;
     border-radius: 50px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: var(--transicion-rapida);
+    display: inline-block;
+    text-align: center;
+    font-family: var(--fuente-principal);
+    font-size: 0.95rem;
 }
 
-.btn-create-post:hover {
-    background-color: #2980b9;
+/* Efecto hover general para botones */
+button:hover,
+.btn-create-post:hover,
+.btn-logout:hover,
+.btn-admin:hover,
+.btn-login:hover,
+.btn-register:hover,
+.btn-search:hover,
+.btn-reset:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+/* Variantes específicas de botones */
+.btn-create-post,
+.btn-search,
+.btn-reset {
+    background-color: var(--color-primario);
     color: white;
-    transform: scale(1.05);
+}
+
+.btn-create-post:hover,
+.btn-search:hover,
+.btn-reset:hover {
+    background-color: var(--color-primario-oscuro);
+    color: white;
+}
+
+.btn-logout {
+    background-color: var(--color-acento);
+    color: white;
+}
+
+.btn-logout:hover {
+    background-color: var(--color-acento-oscuro);
+    color: white;
+}
+
+.btn-admin {
+    background-color: var(--color-exito);
+    color: white;
+}
+
+.btn-admin:hover {
+    background-color: var(--color-exito-oscuro);
+    color: white;
+}
+
+.btn-login,
+.btn-register {
+    background-color: transparent;
+    color: var(--color-primario);
+    border: 2px solid var(--color-primario);
+}
+
+.btn-login:hover,
+.btn-register:hover {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+/* Prevenir que los botones hereden estilos de nav */
+.nav .btn-create-post::after,
+.nav .btn-logout::after,
+.nav .btn-admin::after,
+.nav .btn-login::after,
+.nav .btn-register::after {
+    display: none;
 }
 
 /* ---------------------------
-   3. Contenedor Principal y Títulos (base.html)
-   ---------------------------
-*/
-.container {
-    max-width: 960px;
-    margin: 40px auto;
-    padding: 0 20px;
+   5. FORMULARIO DE BÚSQUEDA Y FILTROS
+   --------------------------- */
+.search-section {
+    margin-bottom: 2rem;
 }
 
-h2 {
-    font-size: 1.8em;
-    border-bottom: 3px solid var(--color-acento-primario);
-    padding-bottom: 10px;
-    margin-bottom: 30px;
-}
-
-/* ---------------------------
-   4. Formulario de Filtros (home.html)
-   ---------------------------
-*/
 .search-bar {
     display: flex;
     gap: 15px;
     align-items: center;
+    flex-wrap: wrap;
     margin-bottom: 40px;
-    background-color: var(--color-principal);
-    padding: 15px;
+    background-color: var(--color-superficie);
+    padding: 20px;
     border-radius: var(--radio-borde);
     box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-borde);
 }
 
 .search-bar input,
-.search-bar select {
-    padding: 10px 15px;
+.search-bar select,
+.search-input,
+.filter-select {
+    padding: 12px 15px;
     border-radius: 8px;
     border: 1px solid var(--color-borde);
-    font-size: 1em;
+    font-size: 1rem;
     font-family: var(--fuente-principal);
-    transition: all 0.3s ease;
+    transition: var(--transicion-rapida);
+    background-color: var(--color-superficie);
 }
 
+/* Input de búsqueda principal */
+.search-input {
+    flex: 2;
+    min-width: 250px;
+}
+
+/* Selectores de filtros */
+.filter-select {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Estados de focus */
 .search-bar input:focus,
-.search-bar select:focus {
+.search-bar select:focus,
+.search-input:focus,
+.filter-select:focus {
     outline: none;
-    border-color: var(--color-acento-primario);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
-.search-bar input {
-    flex-grow: 1;
-}
-
-.search-bar button {
-    background-color: var(--color-acento-primario);
-    color: white;
-    border: none;
-    padding: 10px 20px;
+/* Botón de búsqueda */
+.btn-search {
+    padding: 12px 30px;
     border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #2980b9;
 }
 
 /* ---------------------------
-   5. Tarjetas de Posts (home.html)
-   ---------------------------
-*/
+   6. CONTENEDOR DE POSTS
+   --------------------------- */
+.posts-container {
+    margin-bottom: 3rem;
+}
+
+/* Tarjetas de posts */
 .post {
-    background: var(--color-principal);
+    background: var(--color-superficie);
     padding: 30px;
     margin-bottom: 30px;
     border-radius: var(--radio-borde);
     box-shadow: var(--sombra-suave);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--color-borde);
+    transition: var(--transicion-rapida);
+    overflow: hidden;
 }
 
 .post:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--sombra-elevada);
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-fuerte);
 }
 
-.post h3 a {
-    color: var(--color-texto-oscuro);
-    font-size: 1.6em;
+/* Título del post */
+.post-title {
+    margin: 0 0 15px 0;
+}
+
+.post-title a {
+    color: var(--color-texto-principal);
+    font-size: 1.7rem;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.post h3 a:hover {
-    color: var(--color-acento-primario);
+.post-title a:hover {
+    color: var(--color-primario);
 }
 
-.post .post-meta {
-    display: flex;
-    gap: 15px;
-    margin: 10px 0;
-    color: #7f8c8d;
-    font-size: 0.9em;
-}
-
-.post p {
-    color: var(--color-texto-secundario);
-    font-size: 1.1em;
-    margin: 15px 0;
-}
-
-.post img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
-    border-radius: 8px;
-}
-
-.post .read-more {
-    display: inline-block;
-    margin-top: 15px;
-    font-weight: bold;
-    color: var(--color-acento-primario);
-    text-decoration: none;
-}
-
-.post .read-more:hover {
-    text-decoration: underline;
-}
-.btn-logout {
-    background-color: #ff4d4d;  /* Rojo vivo */
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: #cc0000; /* Rojo más oscuro al pasar el mouse */
-    color: #fff;
-    text-decoration: none;
-}
-
-
-/* Contenedor general del post */
-.post-wrapper {
-  background: #fff;
-  border-radius: 18px;
-  padding: 2.2rem;
-  border: 1px solid rgba(13, 43, 69, 0.08);
-  box-shadow: 0 6px 24px rgba(13, 43, 69, 0.08);
-  margin: 2rem auto;
-  max-width: 760px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Franja lateral decorativa */
-.post-wrapper::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 6px;
-  background: linear-gradient(180deg, #1e6099, #1e6099);
-  border-radius: 18px 0 0 18px;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-.post-wrapper:hover::before {
-  width: 10px;
-  background: linear-gradient(180deg, #0d2b45, #1a4e7a);
-}
-
-/* Hover general con “flotado” */
-.post-wrapper:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 28px rgba(13, 43, 69, 0.15);
-}
-
-/* Título */
-.post-title {
-  margin-bottom: 0.8rem;
-  font-size: 2.1rem;
-  font-weight: 700;
-  color: #0d2b45;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding-bottom: 0.5rem;
-  letter-spacing: -0.5px;
-}
-
-/* Metadatos */
+/* Metadatos del post */
 .post-meta {
-  font-size: 0.9rem;
-  color: #6c757d;
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-borde);
 }
 
-/* Imagen */
+.meta-item {
+    color: var(--color-texto-secundario);
+    font-size: 0.9rem;
+}
+
+.meta-item strong {
+    color: var(--color-texto-principal);
+    font-weight: 500;
+}
+
+/* Imagen del post */
 .post-image {
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
-.post-image:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+    margin: 20px -30px;
+    overflow: hidden;
 }
 
-/* Pie de imagen */
-.img-caption {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-top: -0.3rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  font-style: italic;
+.post-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
 }
 
-/* Contenido */
-.post-content {
-  margin-top: 1rem;
-  line-height: 1.75;
-  font-size: 1.08rem;
-  color: #2c2c2c;
+.post-image:hover img {
+    transform: scale(1.05);
 }
 
-/* Botón Me gusta */
-.btn-like {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 30px;
-  padding: 0.65rem 1.5rem;
-  font-size: 1rem;
-  background-color: #fff;
-  border: 1px solid rgba(0,0,0,0.08);
-  color: #d6336c;
-  font-weight: 500;
-  transition: all 0.25s ease-in-out;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-  cursor: pointer;
-}
-.btn-like:hover {
-  transform: translateY(-2px);
-  background-color: #ffe5e8;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+/* Extracto del post */
+.post-excerpt {
+    margin: 20px 0;
 }
 
-/* Botón volver */
-.btn-back {
-  margin-top: 1.5rem;
-  display: inline-block;
-  border-radius: 30px;
-  padding: 0.6rem 1.4rem;
-  background: linear-gradient(135deg, #0d2b45, #1a4e7a);
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.25s ease, transform 0.2s ease;
-  box-shadow: 0 4px 12px rgba(13, 43, 69, 0.2);
-}
-.btn-back:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #0a1f33, #133b5a);
+.post-excerpt p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--color-texto-secundario);
 }
 
+/* Enlace leer más */
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 15px;
+    font-weight: 600;
+    color: var(--color-primario);
+    text-decoration: none;
+    transition: var(--transicion-rapida);
+}
 
+.read-more:hover {
+    color: var(--color-primario-oscuro);
+    transform: translateX(5px);
+}
 
+/* ---------------------------
+   7. MENSAJE CUANDO NO HAY POSTS
+   --------------------------- */
+.no-posts {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+}
 
+.no-posts p {
+    font-size: 1.2rem;
+    color: var(--color-texto-secundario);
+    margin-bottom: 25px;
+}
 
-form input[type="text"],
-form textarea,
-form select {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* ---------------------------
+   8. PAGINACIÓN MEJORADA
+   --------------------------- */
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin: 3rem 0;
+    padding: 20px;
+    flex-wrap: wrap;
 }
-form textarea {
-  min-height: 250px;
-  resize: vertical;
+
+.page-link,
+.page-current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transicion-rapida);
 }
-.card-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #007bff;
+
+.page-link {
+    background: var(--color-superficie);
+    color: var(--color-texto-secundario);
+    border: 1px solid var(--color-borde);
 }
-.btn-primary,
-.btn-outline-secondary {
-  padding: 10px 24px;
-  font-size: 16px;
-  border-radius: 6px;
+
+.page-link:hover {
+    background: var(--color-primario);
+    color: white;
+    border-color: var(--color-primario);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
 }
-.container {
-  max-width: 900px !important;
+
+.page-current {
+    background: var(--color-primario);
+    color: white;
+    box-shadow: var(--sombra-suave);
+    cursor: default;
 }
+
+/* Botones anterior/siguiente */
+.page-link.prev,
+.page-link.next {
+    padding: 0.5rem 1.5rem;
+}
+
+/* ---------------------------
+   9. ESTILOS RESPONSIVOS
+   --------------------------- */
+@media (max-width: 768px) {
+    /* Header responsivo */
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .nav {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .nav-links,
+    .nav-user {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Formulario de búsqueda responsivo */
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-input,
+    .filter-select {
+        width: 100%;
+    }
+    
+    .btn-search {
+        width: 100%;
+    }
+    
+    /* Posts responsivos */
+    .post {
+        padding: 20px;
+    }
+    
+    .post-title a {
+        font-size: 1.3rem;
+    }
+    
+    .post-image {
+        margin: 15px -20px;
+    }
+    
+    /* Paginación responsiva */
+    .pagination {
+        padding: 10px;
+    }
+    
+    .page-link.prev,
+    .page-link.next {
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes para móviles pequeños */
+    .container {
+        padding: 0 15px;
+    }
+    
+    .header {
+        padding: 1rem;
+    }
+    
+    .post-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-create-post,
+    .btn-logout,
+    .btn-admin,
+    .btn-login,
+    .btn-register {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ---------------------------
+   10. UTILIDADES
+   --------------------------- */
+
+/* Ocultar visualmente pero mantener accesible */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Prevenir selección de texto */
+.no-select {
+    user-select: none;
+}
+
+/* Truncar texto con elipsis */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+

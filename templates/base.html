@@ -2,53 +2,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Meta tags esenciales -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}BLOG DE AYUDA A PROGRAMADORES{% endblock %}</title>
+    <meta name="description" content="Blog especializado en ayuda y recursos para programadores iniciantes">
+    <meta name="author" content="Jonathan & Danilo">
+    
+    <!-- Título dinámico de la página -->
+    <title>{% block title %}Blog de Ayuda a Programadores{% endblock %}</title>
 
+    <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <!-- Hoja de estilos principal -->
     <link rel="stylesheet" href="{% static 'posts/style.css' %}">
+    
+    <!-- Bloque para CSS adicional en páginas específicas -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-
+    <!-- Cabecera principal del sitio -->
     <header class="header">
-        <h1 class="header-title">BLOG DE AYUDA A PROGRAMADORES</h1>
+        <!-- Título del blog -->
+        <h1 class="header-title">Blog de Ayuda a Programadores</h1>
+        
+        <!-- Barra de navegación -->
         <nav class="nav">
+            <!-- Enlaces principales de navegación -->
             <div class="nav-links">
                 <a href="{% url 'home' %}">Inicio</a>
                 <a href="{% url 'acerca_de' %}">Acerca de</a>
                 <a href="{% url 'contacto' %}">Contacto</a>
             </div>
     
+            <!-- Sección de usuario -->
             <div class="nav-user">
                 {% if user.is_authenticated %}
+                    <!-- Usuario autenticado -->
                     <span class="user-greeting">Hola, {{ user.username }}!</span>
+                    
+                    <!-- Enlace admin solo para staff -->
                     {% if user.is_staff %}
-                        <a href="/admin/">Panel Admin</a>
+                        <a href="/admin/" class="btn-admin">Panel Admin</a>
                     {% endif %}
+                    
+                    <!-- Botón crear post -->
                     <a href="{% url 'crear_post' %}" class="btn-create-post">Crear Post</a>
+                    
+                    <!-- Formulario de cierre de sesión - CORREGIDO -->
                     <form method="post" action="{% url 'logout' %}" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" class="btn-logout">Cerrar sesión</button>
-</form>
-    </button>
-</form>
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">Cerrar sesión</button>
+                    </form>
                 {% else %}
-                    <a href="{% url 'login' %}">Iniciar Sesión</a>
-                    <a href="{% url 'register' %}">Registrarse</a>
+                    <!-- Usuario no autenticado -->
+                    <a href="{% url 'login' %}" class="btn-login">Iniciar Sesión</a>
+                    <a href="{% url 'register' %}" class="btn-register">Registrarse</a>
                 {% endif %}
             </div>
         </nav>
     </header>
 
+    <!-- Contenedor principal del contenido -->
     <main class="container">
         {% block content %}
+        <!-- El contenido específico de cada página se inserta aquí -->
         {% endblock %}
     </main>
 
+    <!-- Footer opcional -->
+    <!-- 
+    <footer class="footer">
+        <p>&copy; 2025 Blog de Ayuda a Programadores - Desarrollado por Jonathan & Danilo</p>
+    </footer>
+    -->
 </body>
 </html>
