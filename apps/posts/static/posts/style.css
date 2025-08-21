@@ -21,16 +21,13 @@
     --color-acento-oscuro: #b02a37;
     --color-exito: #28a745;
     --color-exito-oscuro: #218838;
-
     /* Tipografía */
     --fuente-principal: 'Poppins', sans-serif;
     --fuente-titulos: 'Georgia', serif;
-
     /* Sombras suaves para dar profundidad */
     --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.05);
     --sombra-media: 0 8px 15px rgba(0, 0, 0, 0.08);
     --sombra-fuerte: 0 12px 25px rgba(0, 0, 0, 0.12);
-
     /* Otros */
     --radio-borde: 10px;
     --transicion-rapida: all 0.25s ease-in-out;
@@ -81,7 +78,8 @@ h2, .section-title {
    3. ENCABEZADO Y NAVEGACIÓN
    --------------------------- */
 .header {
-    background-color: var(--color-superficie);
+    background-color: #5f7894; /* Color de fondo personalizado */
+    color: white;
     padding: 1.2rem 2rem;
     box-shadow: var(--sombra-suave);
     border-bottom: 1px solid var(--color-borde);
@@ -94,7 +92,7 @@ h2, .section-title {
     font-family: var(--fuente-titulos);
     text-align: center;
     font-size: 2.2rem;
-    color: var(--color-texto-principal);
+    color: white; /* Color de texto personalizado */
     margin: 0 0 1rem 0;
 }
 
@@ -113,8 +111,8 @@ h2, .section-title {
 }
 
 /* Enlaces de navegación */
-.nav a {
-    color: var(--color-texto-secundario);
+.nav-links a {
+    color: white; /* Color de texto personalizado */
     text-decoration: none;
     font-weight: 500;
     position: relative;
@@ -123,29 +121,29 @@ h2, .section-title {
 }
 
 /* Efecto de subrayado animado */
-.nav a::after {
+.nav-links a::after {
     content: '';
     position: absolute;
     width: 0;
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: var(--color-primario);
+    background-color: white; /* Color de subrayado personalizado */
     transition: width 0.3s ease;
 }
 
-.nav a:hover {
-    color: var(--color-texto-principal);
+.nav-links a:hover {
+    color: white; /* Mantener el color blanco en hover */
 }
 
-.nav a:hover::after {
+.nav-links a:hover::after {
     width: 100%;
 }
 
 /* Saludo al usuario */
 .user-greeting {
     font-weight: 500;
-    color: var(--color-texto-principal);
+    color: white; /* Color de texto personalizado */
 }
 
 /* ---------------------------
@@ -153,14 +151,7 @@ h2, .section-title {
    --------------------------- */
 
 /* Estilo base para todos los botones */
-button,
-.btn-create-post,
-.btn-logout,
-.btn-admin,
-.btn-login,
-.btn-register,
-.btn-search,
-.btn-reset {
+.btn-base {
     padding: 10px 20px;
     border-radius: 50px;
     text-decoration: none;
@@ -174,17 +165,15 @@ button,
     font-size: 0.95rem;
 }
 
+/* Estilo para los botones en la navegación */
+.nav-user .btn-base {
+    color: white; /* Asegurar que el texto sea blanco */
+}
+
 /* Efecto hover general para botones */
-button:hover,
-.btn-create-post:hover,
-.btn-logout:hover,
-.btn-admin:hover,
-.btn-login:hover,
-.btn-register:hover,
-.btn-search:hover,
-.btn-reset:hover {
+.btn-base:hover {
     transform: translateY(-2px);
-    box-shadow: var(--sombra-media);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Variantes específicas de botones */
@@ -195,31 +184,32 @@ button:hover,
     color: white;
 }
 
-.btn-create-post:hover,
+.btn-create-post {
+    background-color: #3498db;
+}
+
 .btn-search:hover,
 .btn-reset:hover {
     background-color: var(--color-primario-oscuro);
-    color: white;
 }
 
 .btn-logout {
-    background-color: var(--color-acento);
+    background-color: #e74c3c;
     color: white;
 }
 
 .btn-logout:hover {
     background-color: var(--color-acento-oscuro);
-    color: white;
 }
 
 .btn-admin {
     background-color: var(--color-exito);
     color: white;
+    font-weight: 600;
 }
 
 .btn-admin:hover {
     background-color: var(--color-exito-oscuro);
-    color: white;
 }
 
 .btn-login,
@@ -233,15 +223,6 @@ button:hover,
 .btn-register:hover {
     background-color: var(--color-primario);
     color: white;
-}
-
-/* Prevenir que los botones hereden estilos de nav */
-.nav .btn-create-post::after,
-.nav .btn-logout::after,
-.nav .btn-admin::after,
-.nav .btn-login::after,
-.nav .btn-register::after {
-    display: none;
 }
 
 /* ---------------------------
@@ -488,51 +469,51 @@ button:hover,
     .header-title {
         font-size: 1.5rem;
     }
-    
+
     .nav {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .nav-links,
     .nav-user {
         width: 100%;
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     /* Formulario de búsqueda responsivo */
     .search-bar {
         flex-direction: column;
     }
-    
+
     .search-input,
     .filter-select {
         width: 100%;
     }
-    
+
     .btn-search {
         width: 100%;
     }
-    
+
     /* Posts responsivos */
     .post {
         padding: 20px;
     }
-    
+
     .post-title a {
         font-size: 1.3rem;
     }
-    
+
     .post-image {
         margin: 15px -20px;
     }
-    
+
     /* Paginación responsiva */
     .pagination {
         padding: 10px;
     }
-    
+
     .page-link.prev,
     .page-link.next {
         padding: 0.5rem 1rem;
@@ -544,16 +525,16 @@ button:hover,
     .container {
         padding: 0 15px;
     }
-    
+
     .header {
         padding: 1rem;
     }
-    
+
     .post-meta {
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .btn-create-post,
     .btn-logout,
     .btn-admin,
@@ -595,9 +576,8 @@ button:hover,
 
 
 
-
 .header {
-    background-color: #1f2d3d;
+    background-color: #3b4550;
     color: white;
 }
 
